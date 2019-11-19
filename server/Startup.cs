@@ -28,8 +28,7 @@ namespace TobyBlazor
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
-            services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
+            services.AddServerSideBlazor();            
 
             services.AddDbContext<DataContext>();
         }

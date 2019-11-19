@@ -29,6 +29,14 @@
     public List<Video> SearchResults = new List<Video>();
     public string SelectedVideoId { get; set; }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await jsRuntime.InvokeVoidAsync("setModalCloseStopVideo", "ytModal");
+        }
+    }
+
     public void OnSearchResults(List<Video> results)
     {
         SearchResults = results;
@@ -48,6 +56,7 @@
 
     public async Task ToggleModal()
     {
-        await jsRuntime.InvokeAsync<string>("toggleModal", "ytModal");
+        await jsRuntime.InvokeVoidAsync("toggleModal", "ytModal");
     }
+
 }

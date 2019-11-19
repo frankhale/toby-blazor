@@ -39,6 +39,7 @@
         .modal-tall .modal-dialog {
             height: 95%;
         }
+
         .modal-tall .modal-content {
             height: 90%;
         }
@@ -118,6 +119,18 @@
         window.toggleModal = function (id) {
             console.log(id);
             $('#' + id).modal('toggle');
+
+            if (player) {
+                player.playVideo();
+            }
+        }
+
+        window.setModalCloseStopVideo = function (id) {
+            $('#' + id).on("hidden.bs.modal", function () {
+                if (player) {
+                    player.stopVideo();
+                }
+            });
         }
     </script>
 
