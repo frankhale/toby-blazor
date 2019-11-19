@@ -9,9 +9,9 @@ sorts of really bad things going on here right now.
 
 ## Screenshots
 
-![Basic UI](screenshots/one.png)
+![Basic UI](screenshots/one.PNG)
 
-![Video Playback](screenshots/two.png)
+![Video Playback](screenshots/two.PNG)
 
 ## Folder Layout
 
