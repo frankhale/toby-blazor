@@ -1,0 +1,44 @@
+﻿@namespace TobyBlazor.Components
+@using System.Threading
+
+@inject IJSRuntime jsRuntime
+
+<div id="player"></div>
+
+@code {
+    private Timer _timer;
+    private bool playerReady = false;
+    // 2OXtQm1Tecg
+
+    [Parameter]
+    public string VideoId { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        playerReady = await jsRuntime.InvokeAsync<bool>("checkPlayer");
+
+        if (playerReady)
+        {
+            await jsRuntime.InvokeAsync<string>("playVideo", VideoId);
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await jsRuntime.InvokeVoidAsync("startupYouTubeAPI");
+
+            _timer = new Timer(async (e) =>
+            {
+                playerReady = await jsRuntime.InvokeAsync<bool>("checkPlayer");
+
+                if (playerReady)
+                {
+                    await jsRuntime.InvokeAsync<string>("playVideo", VideoId);
+                    _timer.Dispose();
+                }
+            }, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
+        }
+    }
+}

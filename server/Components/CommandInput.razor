@@ -1,0 +1,36 @@
+﻿@namespace TobyBlazor.Components
+
+@using TobyBlazor.Data
+@using TobyBlazor.Models
+@using System.Linq
+
+@inject IJSRuntime jsRuntime
+
+<input type="text" class="form-control" id="commandInput" placeholder="Search..."
+       @onchange=@(newValue => CommandChanged(newValue.Value.ToString()))
+       onchange-prevent-default />
+
+@code {
+    [Parameter]
+    public EventCallback<List<Video>> OnSearch { get; set; }
+
+    private readonly DataContext db = new DataContext();
+
+    public List<Video> SearchResults = new List<Video>();
+
+    private List<Video> SearchVideos(string term)
+    {
+        return db.Videos.Where(x => x.Title.ToLower()
+                                           .Contains(term.ToLower()))
+                                           .Select(x => x).ToList();
+    }
+
+    private async void CommandChanged(string command)
+    {
+        SearchResults = SearchVideos(command);
+
+        await OnSearch.InvokeAsync(SearchResults);
+        await jsRuntime.InvokeAsync<string>("console.log", String.Format("Searching For: {0}", command));
+        await jsRuntime.InvokeAsync<string>("console.log", String.Format("Found {0} results", SearchResults.Count()));
+    }
+}
