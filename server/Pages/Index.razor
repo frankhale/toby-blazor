@@ -54,7 +54,7 @@
         await ToggleModal();
     }
 
-    public async Task ToggleModal()
+    private async Task ToggleModal()
     {
         await jsRuntime.InvokeVoidAsync("toggleModal", "ytModal");
     }

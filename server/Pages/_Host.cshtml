@@ -13,7 +13,7 @@
     <title>TobyBlazor</title>
 
     <base href="~/" />
-    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/bootstrap/cyborg-bootstrap.min.css" />
     <link href="css/site.css" rel="stylesheet" />
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
@@ -36,31 +36,21 @@
             overflow: hidden;
         }*/
 
+        .modal {
+            overflow: hidden !important;
+        }
+
         .modal-tall .modal-dialog {
-            height: 95%;
+            height: 100%;
         }
 
         .modal-tall .modal-content {
-            height: 90%;
+            height: 93%;
         }
     </style>
 </head>
 <body>
     <script>
-        //window.ytfullwindow = false;
-
-        //document.onkeyup = function (e) {
-        //    if (e.which == 113) {
-        //        if (!window.ytfullwindow) {
-        //            $("#player").addClass("fullwindow");
-        //            ytfullwindow = true;
-        //        } else {
-        //            $("#player").removeClass("fullwindow");
-        //            ytfullwindow = false;
-        //        }
-        //    }
-        //};
-
         window.startupYouTubeAPI = function () {
             var tag = document.createElement('script');
             tag.src = 'https://www.youtube.com/iframe_api';
