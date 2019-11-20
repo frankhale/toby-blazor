@@ -20,9 +20,27 @@
 
     private List<Video> SearchVideos(string term)
     {
-        return db.Videos.Where(x => x.Title.ToLower()
-                                           .Contains(term.ToLower()))
-                                           .Select(x => x).ToList();
+        // We do much more here like look for specific commands
+
+        List<Video> results = new List<Video>();
+
+        if (String.IsNullOrEmpty(term.Trim())) return results;
+
+        switch (term.ToLower()) {
+            case "/all":
+                results = db.Videos.ToList();
+                break;
+
+            default:
+                results = db.Videos.Where(x => x.Title.ToLower()
+                                              .Contains(term.ToLower()))
+                                              .Select(x => x).ToList();
+                break;
+        }
+
+
+
+        return results;
     }
 
     private async void CommandChanged(string command)
