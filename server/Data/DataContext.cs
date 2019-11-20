@@ -10,11 +10,7 @@ namespace TobyBlazor.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Filename=videos.db", options =>
-            {
-                options.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
-            });
-
+            optionsBuilder.UseSqlite("Filename=videos.db");
             base.OnConfiguring(optionsBuilder);
         }        
     }

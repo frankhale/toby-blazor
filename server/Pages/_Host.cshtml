@@ -24,18 +24,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
     <style>
-        /*.fullwindow {
-            position: fixed !important;
-            top: 0;
-            left: 0;
-            margin: 0 !important;
-            padding: 0 !important;
-            width: 100% !important;
-            height: 100% !important;
-            z-index: 1000 !important;
-            overflow: hidden;
-        }*/
-
         .modal {
             overflow: hidden !important;
         }
@@ -51,6 +39,8 @@
 </head>
 <body>
     <script>
+        // This JS needs to be cleaned up, put into it's own file... =)
+
         window.startupYouTubeAPI = function () {
             var tag = document.createElement('script');
             tag.src = 'https://www.youtube.com/iframe_api';
@@ -84,18 +74,6 @@
 
         function onPlayerReady(event) {
             playerReady = true;
-
-            //const $player = $("#player");
-
-            //var resizeVideo = function() {
-            //    $player.width(window.innerWidth);
-            //};
-
-            //$(window).resize(e => {
-            //  resizeVideo();
-            //});
-
-            //resizeVideo();
         }
 
         window.checkPlayer = function () {
