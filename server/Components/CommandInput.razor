@@ -10,13 +10,11 @@
        @onchange=@(newValue => CommandChanged(newValue.Value.ToString()))
        onchange-prevent-default />
 
-@code {
-    [Parameter]
-    public EventCallback<List<Video>> OnSearch { get; set; }
-
+@code {    
     private readonly IVideoRepository videos = new VideoRepository();
 
-    public List<Video> SearchResults = new List<Video>();
+    [Parameter]
+    public EventCallback<List<Video>> OnSearch { get; set; }     
 
     private async void CommandChanged(string term)
     {
