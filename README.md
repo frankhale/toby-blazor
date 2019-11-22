@@ -1,15 +1,16 @@
 # toby-blazor
 
-Possibly one day a rewrite of [Toby](https://github.com/frankhale/toby) using Blazor
+Possibly one day a rewrite of [Toby](https://github.com/frankhale/toby) using
+Blazor
 
 ## Status
 
-Right now this is very naive and rough. I'm using this to learn Blazor. There
-are all sorts of really bad things going on here right now. The database
-shipping in the repo is a slighly modified one from [Toby](https://github.com/frankhale/toby).
+Right now this is very early, naive and rough. I'm using this to learn Blazor.
+The database shipping in the repo is a slighly modified one from [Toby](https://github.com/frankhale/toby).
 
-There is currently no UI to add/edit videos. I'm using [DB Browser](https://sqlitebrowser.org/) to edit the SQLite db directly. Additionally there is no
-functionality to search YouTube using the YouTube Data API.
+There is currently no UI to add/edit videos. I'm using [DB Browser](https://sqlitebrowser.org/)
+to edit the SQLite db directly. Additionally there is no functionality to search
+YouTube using the YouTube Data API.
 
 I'm using the latest Visual Studio 2019 Preview with .NET Core 3.1 preview3 to
 compile and run this.
@@ -23,10 +24,18 @@ much difference at all... I am not a security expert.
 
 ## Searching For Videos
 
+NOTE: The database is pre-populated with videos I added when developing
+[Toby](https:/github.com/frankhale/toby). Use the command `/all` to list them.
+There are videos in the following groups `trance, christian, misc`.
+
 Currently searching is very crude. If you enter a search term it is compared
 against video titles and if the search term is contained in the title the
-results are displayed. You can enter `/all` to return all the videos in the
-database.
+results are displayed.
+
+Search commands:
+
+- `/all`: lists all videos in the database
+- `/group [name]`: lists videos in a specific group
 
 ## Screenshots
 
@@ -49,4 +58,4 @@ Frank Hale &lt;frankhale@gmail.com&gt;
 
 ## Date
 
-19 November 2019
+21 November 2019
