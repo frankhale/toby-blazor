@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Toby (Blazor)</title>
+    <title>Toby</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -49,8 +49,7 @@
         window.playerReady = false;
         window.player = null;
 
-        window.initializeYouTubePlayer = function () {
-            console.log("initializeYouTubePlayer - called")
+        window.initializeYouTubePlayer = function () {            
             window.player = null;
 
             var tag = document.createElement('script');
@@ -81,13 +80,11 @@
             }
         }
 
-        window.onYouTubeIframeAPIReady = function () {
-            console.log("onYouTubeIframeAPIReady - called");
+        window.onYouTubeIframeAPIReady = function () {            
             window.ytAPIReady = true;
         }
 
-        window.onPlayerReady = function (event) {
-            console.log("onPlayerReady - called");
+        window.onPlayerReady = function (event) {            
             window.playerReady = true;
         }
 
@@ -100,8 +97,6 @@
         }
 
         window.checkPlayer = function () {
-            console.log("player = ", player)
-
             if (player && playerReady) {
                 return true;
             } else {

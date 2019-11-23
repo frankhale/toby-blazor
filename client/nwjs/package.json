@@ -1,0 +1,10 @@
+{
+  "name": "toby-blazor",
+  "main": "index.html",
+  "window": {
+    "icon": "./toby.png",
+    "exe_icon": "./toby.png",
+    "width": 1024,
+    "height": 768
+  }
+}

@@ -38,7 +38,7 @@ namespace TobyBlazor.Data
                                        .OrderByDescending(x => x.CreateDate)
                                        .ToList();
 
-            allRPVideos.ForEach(x => Console.WriteLine(x.CreateDate.ToString()));
+            //allRPVideos.ForEach(x => Console.WriteLine(x.CreateDate.ToString()));
 
             if (allRPVideos.Count == 30)
             {

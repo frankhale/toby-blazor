@@ -1,5 +1,4 @@
 ﻿@using TobyBlazor.Models
-
 @using TobyBlazor.Data
 
 <div style="margin-top:25px;">
@@ -21,15 +20,12 @@
 }
 else
 {
-    <WindowTitle Title="Toby (Blazor)" />
+    <WindowTitle Title="Toby" />
 }
 
 @code {
     [Parameter]
     public List<Video> Videos { get; set; }
-
-    [Parameter]
-    public EventCallback<Video> OnSelectedVideo { get; set; }
 
     private readonly IVideoRepository videos = new VideoRepository();
 
@@ -40,11 +36,10 @@ else
         return String.Format("https://i.ytimg.com/vi/{0}/default.jpg", ytid);
     }
 
-    private async void VideoSelected(Video video)
+    private void VideoSelected(Video video)
     {
         SelectedVideo = video;
         videos.AddToRecentlyPlayed(video);
-        await OnSelectedVideo.InvokeAsync(video);
     }
 
     public void OnVideoDismissed()

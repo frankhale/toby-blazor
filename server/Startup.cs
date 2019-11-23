@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using TobyBlazor.Data;
 
 namespace TobyBlazor
 {
@@ -22,7 +21,6 @@ namespace TobyBlazor
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();            
-
             services.AddDbContext<DataContext>();
         }
 
