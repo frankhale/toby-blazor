@@ -4,29 +4,16 @@
 
 @inject IJSRuntime jsRuntime
 
-<CommandInput OnSearch="@OnSearchResults" />
+<CommandInput OnSearch=@OnSearchResults />
 
 @if (SearchResults.Count > 0)
 {
-    <VideoList Videos="@SearchResults" OnSelectedVideo="@OnSelectedVideoResult" />
+    <VideoList Videos=@SearchResults />
 }
-
-<div class="modal fade modal-tall" id="ytModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog mw-100" role="document" style="width:95%">
-        <div class="modal-content">
-            <div class="modal-body">
-                @if (!String.IsNullOrEmpty(SelectedVideoId))
-                {
-                    <YouTube VideoId="@SelectedVideoId" />
-                }
-            </div>
-        </div>
-    </div>
-</div>
 
 @code {
     public List<Video> SearchResults = new List<Video>();
-    public string SelectedVideoId { get; set; }
+    public Video SelectedVideo { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -39,22 +26,5 @@
     public void OnSearchResults(List<Video> results)
     {
         SearchResults = results;
-    }
-
-    public async void OnSelectedVideoResult(string videoId)
-    {
-        SelectedVideoId = videoId;
-        await ToggleModal();
-    }
-
-    public async void OnModalCloseClicked()
-    {
-        SelectedVideoId = "";
-        await ToggleModal();
-    }
-
-    private async Task ToggleModal()
-    {
-        await jsRuntime.InvokeVoidAsync("toggleModal", "ytModal");
     }
 }

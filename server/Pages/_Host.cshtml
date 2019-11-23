@@ -8,12 +8,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>Toby (Blazor)</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TobyBlazor</title>
 
     <base href="~/" />
     <link rel="stylesheet" href="css/bootstrap/cyborg-bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <link href="css/site.css" rel="stylesheet" />
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
@@ -39,19 +41,26 @@
 </head>
 <body>
     <script>
-        // This JS needs to be cleaned up, put into it's own file... =)
+        window.setTitle = function (title) {
+            document.title = title;
+        }
 
-        window.startupYouTubeAPI = function () {
+        window.ytAPIReady = false;
+        window.playerReady = false;
+        window.player = null;
+
+        window.initializeYouTubePlayer = function () {
+            console.log("initializeYouTubePlayer - called")
+            window.player = null;
+
             var tag = document.createElement('script');
             tag.src = 'https://www.youtube.com/iframe_api';
             var firstScriptTag = document.getElementsByTagName('script')[0];
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         }
 
-        window.playerReady = false;
-        window.player = null;
-        function onYouTubeIframeAPIReady() {
-            window.player = new YT.Player('player', {
+        window.createPlayer = function () {
+            window.player = new YT.Player("player", {
                 videoId: '',
                 width: "100%",
                 height: "100%",
@@ -63,20 +72,36 @@
                     'onReady': onPlayerReady,
                 }
             });
+        }
 
-            window.playVideo = function (videoId) {
-                if (window.player) {
-                    window.player.setVolume(30);
-                    window.player.loadVideoById(videoId);
-                }
+        window.playVideo = function (videoId) {
+            if (window.player) {
+                window.player.setVolume(30);
+                window.player.loadVideoById(videoId);
             }
         }
 
-        function onPlayerReady(event) {
-            playerReady = true;
+        window.onYouTubeIframeAPIReady = function () {
+            console.log("onYouTubeIframeAPIReady - called");
+            window.ytAPIReady = true;
+        }
+
+        window.onPlayerReady = function (event) {
+            console.log("onPlayerReady - called");
+            window.playerReady = true;
+        }
+
+        window.checkAPIReady = function () {
+            if (window.ytAPIReady) {
+                return true;
+            }
+
+            return false;
         }
 
         window.checkPlayer = function () {
+            console.log("player = ", player)
+
             if (player && playerReady) {
                 return true;
             } else {
@@ -84,9 +109,12 @@
             }
         }
 
-        window.toggleModal = function (id) {
-            console.log(id);
-            $('#' + id).modal('toggle');
+        window.closeModal = function (id) {
+            $("#" + id).modal("hide");
+        }
+
+        window.openModal = function (id) {
+            $("#" + id).modal({ backdrop: "static", keyboard: false });
 
             if (player) {
                 player.playVideo();

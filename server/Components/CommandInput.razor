@@ -2,7 +2,6 @@
 
 @using TobyBlazor.Data
 @using TobyBlazor.Models
-@using System.Linq
 
 @inject IJSRuntime jsRuntime
 
@@ -18,6 +17,6 @@
 
     private async void CommandChanged(string term)
     {
-        await OnSearch.InvokeAsync(videos.Search(term));
+        await OnSearch.InvokeAsync(await videos.Search(term));
     }
 }

@@ -1,18 +1,27 @@
 ﻿@using TobyBlazor.Models
 
-@if (Videos.Count > 0)
-{
-    <div style="margin-top:25px;">
-        <div class="list-group">
-            @foreach (var video in Videos)
-            {
-                <button type="button" @onclick="@(() => VideoSelected(video))" class="list-group-item list-group-item-action d-flex justify-content-lg-start align-items-center @(video.YTId == SelectedVideo ? "active" : "")">
-                    <img class="mr-3" src="@GetVideoThumbnail(video.YTId)" />
-                    <h5 class="mt-0" style="text-align:left;">@video.Title</h5>
-                </button>                
-            }
-        </div>
+@using TobyBlazor.Data
+
+<div style="margin-top:25px;">
+    <div class="list-group">
+        @foreach (var video in Videos)
+        {
+            <button type="button" @onclick="@(() => VideoSelected(video))" class="list-group-item list-group-item-action d-flex justify-content-lg-start align-items-center @(SelectedVideo != null && video.YTId == SelectedVideo.YTId ? "active" : "")">
+                <img class="mr-3" src="@GetVideoThumbnail(video.YTId)" />
+                <h5 class="mt-0" style="text-align:left;">@video.Title</h5>
+            </button>
+        }
     </div>
+</div>
+
+@if (SelectedVideo != null && !String.IsNullOrEmpty(SelectedVideo.YTId))
+{
+    <WindowTitle Title=@SelectedVideo.Title />
+    <VideoPopup SelectedVideo=@SelectedVideo OnPopupClosed=@OnVideoDismissed />
+}
+else
+{
+    <WindowTitle Title="Toby (Blazor)" />
 }
 
 @code {
@@ -20,9 +29,11 @@
     public List<Video> Videos { get; set; }
 
     [Parameter]
-    public EventCallback<string> OnSelectedVideo { get; set; }
+    public EventCallback<Video> OnSelectedVideo { get; set; }
 
-    private string SelectedVideo = "";
+    private readonly IVideoRepository videos = new VideoRepository();
+
+    private Video SelectedVideo;
 
     private string GetVideoThumbnail(string ytid)
     {
@@ -31,7 +42,13 @@
 
     private async void VideoSelected(Video video)
     {
-        SelectedVideo = video.YTId;
-        await OnSelectedVideo.InvokeAsync(video.YTId);
+        SelectedVideo = video;
+        videos.AddToRecentlyPlayed(video);
+        await OnSelectedVideo.InvokeAsync(video);
+    }
+
+    public void OnVideoDismissed()
+    {
+        SelectedVideo = null;
     }
 }

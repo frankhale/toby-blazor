@@ -1,0 +1,96 @@
+﻿@using TobyBlazor.Models
+
+@inject IJSRuntime jsRuntime
+
+@using TobyBlazor.Data
+
+<div class="modal fade modal-tall" id="ytModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog mw-100" role="document" style="width:95%">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                @if (String.IsNullOrEmpty(SelectedVideo.Group) || SelectedVideo.Group == "Recently Played")
+                {
+                    <div style="margin-right: 25px;" class="btn-group-toggle" data-toggle="buttons" @onclick=@OnAddToFavoritesButtonToggle>
+                        <label class="btn btn-secondary @(AddToFavorites ? "active" : "")">
+                            <input type="checkbox" checked autocomplete="off">
+                            @if (AddToFavorites)
+                            {
+                                <i class="fa fa-star" aria-hidden="true"></i>
+                            }
+                            else
+                            {
+                                <i class="fa fa-star-o" aria-hidden="true"></i>
+                            }
+                        </label>
+                    </div>
+                }
+
+                <div>
+                    <h5 class="modal-title">@SelectedVideo.Title</h5>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick=@OnModalCloseClicked>
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <YouTube VideoId=@SelectedVideo.YTId />
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Video SelectedVideo { get; set; }
+
+    [Parameter]
+    public EventCallback OnPopupClosed { get; set; }
+
+    private readonly IVideoRepository videos = new VideoRepository();
+
+    private bool AddToFavorites = false;
+    private string unselectedStar = "fa fa-star-o";
+    private string selectedStar = "fa fa-star";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            var found = videos.FindByYTId(SelectedVideo.YTId, "Favorites");
+
+            if(found != null)
+            {
+                AddToFavorites = true;
+            }
+        }
+
+        await OpenModal();
+    }
+
+    public async void OnModalCloseClicked()
+    {
+        await jsRuntime.InvokeVoidAsync("closeModal", "ytModal");
+        await OnPopupClosed.InvokeAsync(EventCallback.Empty);
+    }
+
+    private async Task OpenModal()
+    {
+        await jsRuntime.InvokeVoidAsync("openModal", "ytModal");
+    }
+
+    public void OnAddToFavoritesButtonToggle()
+    {
+        if (!AddToFavorites)
+        {
+            AddToFavorites = true;
+            videos.Add(SelectedVideo, "Favorites");
+        }
+        else
+        {
+            AddToFavorites = false;
+            videos.Delete(SelectedVideo.YTId);
+        }
+    }
+}
