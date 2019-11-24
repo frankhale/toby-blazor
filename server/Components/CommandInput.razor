@@ -9,14 +9,27 @@
        @onchange=@(newValue => CommandChanged(newValue.Value.ToString()))
        onchange-prevent-default />
 
-@code {    
+@code {
     private readonly IVideoRepository videos = new VideoRepository();
 
     [Parameter]
-    public EventCallback<List<Video>> OnSearch { get; set; }     
+    public EventCallback<SearchResult> OnSearch { get; set; }
 
     private async void CommandChanged(string term)
     {
-        await OnSearch.InvokeAsync(await videos.Search(term));
+        var result = new SearchResult();
+
+        if (term.StartsWith("/manage") || term.StartsWith("/mg"))
+        {
+            result.Manage = true;
+            result.Videos = videos.AllVideos();
+        }
+        else
+        {
+            result.Manage = false;
+            result.Videos = await videos.Search(term);
+        }
+        
+        await OnSearch.InvokeAsync(result);
     }
 }

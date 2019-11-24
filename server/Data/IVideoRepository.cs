@@ -8,7 +8,8 @@ namespace TobyBlazor.Data
     {
         public Task<List<Video>> Search(string term);
         public Task<List<Video>> SearchYouTube(string term);
-        public List<Video> All();
+        public List<Video> AllVideos();
+        public List<Group> AllGroups();
         public List<Video> Find(string like);
         public List<Video> FindByGroup(string group);
         public Video FindByYTId(string ytid, string group);

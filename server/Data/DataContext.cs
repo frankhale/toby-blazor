@@ -6,6 +6,7 @@ namespace TobyBlazor.Data
     public class DataContext : DbContext
     {
         public DbSet<Video> Videos { get; set; }
+        public DbSet<Group> Groups { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

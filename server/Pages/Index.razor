@@ -1,6 +1,7 @@
 ﻿@page "/"
 
 @using TobyBlazor.Models
+@using TobyBlazor.Data
 
 @inject IJSRuntime jsRuntime
 
@@ -8,12 +9,21 @@
 
 @if (SearchResults.Count > 0)
 {
-    <VideoList Videos=@SearchResults />
+    @if (Manage)
+    {
+        <VideoManagement />
+    }
+    else
+    {
+        <VideoList Videos=@SearchResults />
+    }
 }
 
 @code {
+    private readonly IVideoRepository videos = new VideoRepository();
+
     public List<Video> SearchResults = new List<Video>();
-    public Video SelectedVideo { get; set; }
+    public bool Manage = false;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -23,8 +33,9 @@
         }
     }
 
-    public void OnSearchResults(List<Video> results)
+    public void OnSearchResults(SearchResult result)
     {
-        SearchResults = results;
+        SearchResults = result.Videos;
+        Manage = result.Manage;
     }
 }

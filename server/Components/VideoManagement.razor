@@ -1,0 +1,102 @@
+﻿@using TobyBlazor.Data
+@using TobyBlazor.Models
+@using System.Net
+
+<div style="margin-top:25px;">
+    <nav class="navbar navbar-light bg-light">
+        <div class="navbar-brand">
+            <button type="button" class="btn btn-warning" disabled=@ApplyButtonDisabled>Apply</button>
+            <button type="button" class="btn btn-danger" disabled=@DeleteButtonDisabled>Delete</button>
+        </div>
+        <form class="form-inline">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </nav>
+
+    <div class="list-group">
+        @foreach (var video in videos.AllVideos())
+        {
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div style="margin-left: 10px; margin-right:10px; margin-bottom: 30px;">
+                    <input type="checkbox" class="form-check-input" @onchange="eventArgs => { CheckboxClicked(video.YTId, eventArgs.Value); }" />
+                </div>
+                <div><img class="mr-3" src="@GetVideoThumbnail(video.YTId)" /></div>
+                <div class="w-100"><h5>@WebUtility.HtmlDecode(video.Title)</h5></div>
+                <div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            @video.Group
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                            @foreach (var group in videos.AllGroups())
+                            {
+                                @if (group.Name != "Recently Played")
+                                {
+                                    <button class="dropdown-item" type="button" @onclick="eventArgs => { MenuItemSelected(video, group.Name); }">@group.Name</button>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private readonly IVideoRepository videos = new VideoRepository();
+
+    private bool DeleteButtonDisabled { get; set; } = true;
+    private bool ApplyButtonDisabled { get; set; } = true;
+
+    private List<string> IdsToDelete = new List<string>();
+    private List<Tuple<string, string>> VideoGroupsToChange = new List<Tuple<string, string>>();
+
+    private string GetVideoThumbnail(string ytid)
+    {
+        return String.Format("https://i.ytimg.com/vi/{0}/default.jpg", ytid);
+    }
+
+    private void MenuItemSelected(Video video, string group)
+    {
+        Console.WriteLine("{0} - new group {1}", video.YTId, group);
+
+        var found = VideoGroupsToChange.Find(x => x.Item1 == video.YTId);
+
+        if (video.Group != group && found == null)
+        {
+            video.Group = group;
+            VideoGroupsToChange.Add(new Tuple<string, string>(video.YTId, group));
+        }
+        else
+        {
+            if (found != null)
+            {
+                VideoGroupsToChange.Remove(found);
+            }
+        }
+
+        ApplyButtonDisabled = (VideoGroupsToChange.Count > 0) ? false : true;
+    }
+
+    private void CheckboxClicked(string ytid, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            if (!IdsToDelete.Contains(ytid))
+            {
+                IdsToDelete.Add(ytid);
+            }
+        }
+        else
+        {
+            if (IdsToDelete.Contains(ytid))
+            {
+                IdsToDelete.Remove(ytid);
+            }
+        }
+
+        DeleteButtonDisabled = (IdsToDelete.Count > 0) ? false : true;
+    }
+}

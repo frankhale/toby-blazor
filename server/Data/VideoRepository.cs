@@ -91,10 +91,16 @@ namespace TobyBlazor.Data
             return db.Videos.Where(x => x.YTId == ytid && x.Group == group).FirstOrDefault();
         }
 
-        public List<Video> All()
+        public List<Video> AllVideos()
         {
-            return db.Videos.ToList()
-                            .Where(x => x.Group.ToLower() != "recently played")
+            return db.Videos.Where(x => x.Group.ToLower() != "recently played")
+                            .OrderBy(x => x.Title)
+                            .ToList();
+        }
+
+        public List<Group> AllGroups()
+        {
+            return db.Groups.OrderBy(x => x.Name)
                             .ToList();
         }
 
@@ -143,7 +149,7 @@ namespace TobyBlazor.Data
 
             return value switch
             {
-                _ when MatchesCommandList(value[0], "/ls", "/all") => All(),
+                _ when MatchesCommandList(value[0], "/ls", "/all") => AllVideos(),
                 _ when MatchesCommandList(value[0], "/fav", "/favorites") => FindByGroup("Favorites"),
                 _ when MatchesCommandList(value[0], "/rp", "/recently-played") => FindByGroup("Recently Played"),
                 _ when MatchesCommandList(value[0], "/g", "/group") && HasSubValue(value) => FindByGroup(value[1]),
