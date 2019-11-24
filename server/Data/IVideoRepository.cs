@@ -11,10 +11,13 @@ namespace TobyBlazor.Data
         public List<Video> AllVideos();
         public List<Group> AllGroups();
         public List<Video> Find(string like);
-        public List<Video> FindByGroup(string group);
+        public List<Video> FindByGroup(string group);        
+        public Video FindByYTId(string ytid);
         public Video FindByYTId(string ytid, string group);
         public void Add(Video v, string group);
         public void AddToRecentlyPlayed(Video video);
         public void Delete(string ytid);
+        public void DeleteRange(List<Video> videos);
+        public void UpdateGroup(string ytid, string group);        
     }
 }

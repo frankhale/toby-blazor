@@ -74,16 +74,27 @@ namespace TobyBlazor.Data
             db.SaveChanges();
         }
 
+        public void DeleteRange(List<Video> videos)
+        {
+            db.Videos.RemoveRange(videos);
+            db.SaveChanges();
+        }
+
         public List<Video> Find(string like)
         {
             return db.Videos.Where(x => x.Title.ToLower().Contains(like.ToLower()) && x.Group != "Recently Played")
-                            .ToList();
+                            .ToList();            
         }
 
         public List<Video> FindByGroup(string group)
         {
             return db.Videos.Where(x => x.Group.ToLower() == group.ToLower())
                             .ToList();
+        }
+
+        public Video FindByYTId(string ytid)
+        {
+            return db.Videos.Where(x => x.YTId == ytid && x.Group != "Recently Played").FirstOrDefault();
         }
 
         public Video FindByYTId(string ytid, string group)
@@ -104,6 +115,20 @@ namespace TobyBlazor.Data
                             .ToList();
         }
 
+        public void UpdateGroup(string ytid, string group)
+        {
+            var foundVideo = db.Videos.Where(x => x.YTId == ytid && x.Group != "Recently Played").FirstOrDefault();
+            
+            if(foundVideo != null)
+            {
+                if (!String.IsNullOrEmpty(group))
+                {                    
+                    foundVideo.Group = group;
+                    db.SaveChanges();
+                }
+            }
+        }
+
         public async Task<List<Video>> SearchYouTube(string term)
         {
             var youtubeService = new YouTubeService(new BaseClientService.Initializer()
@@ -116,7 +141,7 @@ namespace TobyBlazor.Data
             searchRequest.Q = term;
             searchRequest.MaxResults = 25;
 
-            var searchListResponse = await searchRequest.ExecuteAsync();
+            var searchListResponse = await Task.Run(() => searchRequest.ExecuteAsync());
 
             List<Video> videos = new List<Video>();
 
