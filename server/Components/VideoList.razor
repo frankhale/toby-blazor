@@ -1,5 +1,6 @@
 ﻿@using TobyBlazor.Models
 @using TobyBlazor.Data
+@using System.Net
 
 <div style="margin-top:25px;">
     <div class="list-group">
@@ -7,7 +8,7 @@
         {
             <button type="button" @onclick="@(() => VideoSelected(video))" class="list-group-item list-group-item-action d-flex justify-content-lg-start align-items-center @(SelectedVideo != null && video.YTId == SelectedVideo.YTId ? "active" : "")">
                 <img class="mr-3" src="@GetVideoThumbnail(video.YTId)" />
-                <h5 class="mt-0" style="text-align:left;">@video.Title</h5>
+                <h5 class="mt-0" style="text-align:left;">@WebUtility.HtmlDecode(video.Title)</h5>
             </button>
         }
     </div>
@@ -15,7 +16,7 @@
 
 @if (SelectedVideo != null && !String.IsNullOrEmpty(SelectedVideo.YTId))
 {
-    <WindowTitle Title=@SelectedVideo.Title />
+    <WindowTitle Title=@WebUtility.HtmlDecode(SelectedVideo.Title) />
     <VideoPopup SelectedVideo=@SelectedVideo OnPopupClosed=@OnVideoDismissed />
 }
 else

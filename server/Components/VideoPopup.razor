@@ -1,11 +1,11 @@
-﻿@using TobyBlazor.Models
+﻿@using TobyBlazor.Data
+@using TobyBlazor.Models
+@using System.Net
 
 @inject IJSRuntime jsRuntime
 
-@using TobyBlazor.Data
-
-<div class="modal fade modal-tall" id="ytModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog mw-100" role="document" style="width:96%">
+<div class="modal fade modal-tall" id="ytModal" tabindex="-1" role="dialog" aria-hidden="true" style="padding-right: 20px !important">
+    <div class="modal-dialog mw-100" role="document" style="width: 100% !important;">
         <div class="modal-content">
             <div class="modal-header">
 
@@ -27,7 +27,7 @@
                 }
 
                 <div>
-                    <h5 class="modal-title">@SelectedVideo.Title</h5>
+                    <h5 class="modal-title">@WebUtility.HtmlDecode(@SelectedVideo.Title)</h5>
                 </div>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick=@OnModalCloseClicked>
                     <span aria-hidden="true">&times;</span>
@@ -56,11 +56,11 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if(firstRender)
+        if (firstRender)
         {
             var found = videos.FindByYTId(SelectedVideo.YTId, "Favorites");
 
-            if(found != null)
+            if (found != null)
             {
                 AddToFavorites = true;
             }
