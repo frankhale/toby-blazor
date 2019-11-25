@@ -25,7 +25,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-    <style>        
+    <style>
+        @@media (min-width: 768px) {
+            .main > div {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+        }
+
         .modal {
             overflow: hidden !important;
             padding-right: 22px !important;
@@ -120,14 +127,14 @@
             console.log("close modal");
 
             $("#" + id).modal("hide");
-            $("body").css("overflow-y", "scroll"); 
+            $("body").css("overflow-y", "scroll");
         }
 
         window.openModal = function (id) {
             console.log("open modal");
-            
+
             $("#" + id).modal({ backdrop: "static", keyboard: false });
-            $("body").css("overflow-y", "hidden"); 
+            $("body").css("overflow-y", "hidden");
 
             if (player) {
                 player.playVideo();
