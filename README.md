@@ -1,7 +1,7 @@
 # Toby (Blazor)
 
-Possibly one day a rewrite of [Toby](https://github.com/frankhale/toby) using
-Blazor. This project is using the server-side hosting model.
+This is a rewrite of [Toby](https://github.com/frankhale/toby) using Blazor.
+This project is using the server-side hosting model.
 
 ## Status
 
@@ -32,16 +32,15 @@ Search commands:
 - `/youtube [name hint]` or `/yt [name hint]`: search YouTube for videos
 - `/recently-played` or `/rp`: list all recently played videos
 - `/favorites` or `/fav`: list favorite videos
-
-NOTE: I'm adding functionality pretty quickly and not all scenarios have been
-properly vetted yet. There is most likely bugs I have not ran into yet and/or
-fixed.
+- `/manage` or `/mg`: video management
 
 ## Screenshots
 
 ![Basic UI](screenshots/one.PNG)
 
 ![Video Playback](screenshots/two.PNG)
+
+![Video Management](screenshots/three.PNG)
 
 ## Folder Layout
 
@@ -58,4 +57,4 @@ Frank Hale &lt;frankhale@gmail.com&gt;
 
 ## Date
 
-23 November 2019
+24 November 2019
