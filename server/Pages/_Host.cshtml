@@ -25,13 +25,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-    <style>
+    <style>        
         .modal {
             overflow: hidden !important;
+            padding-right: 22px !important;
         }
 
         @@media (min-width: 576px) {
-            .modal-dialog {                
+            .modal-dialog {
                 margin: 10px !important;
             }
         }
@@ -42,6 +43,11 @@
 
         .modal-tall .modal-content {
             height: 97%;
+        }
+
+        .modal-open {
+            overflow: auto;
+            padding-right: 0 !important;
         }
     </style>
 </head>
@@ -55,7 +61,7 @@
         window.playerReady = false;
         window.player = null;
 
-        window.initializeYouTubePlayer = function () {            
+        window.initializeYouTubePlayer = function () {
             window.player = null;
 
             var tag = document.createElement('script');
@@ -86,11 +92,11 @@
             }
         }
 
-        window.onYouTubeIframeAPIReady = function () {            
+        window.onYouTubeIframeAPIReady = function () {
             window.ytAPIReady = true;
         }
 
-        window.onPlayerReady = function (event) {            
+        window.onPlayerReady = function (event) {
             window.playerReady = true;
         }
 
@@ -111,11 +117,17 @@
         }
 
         window.closeModal = function (id) {
+            console.log("close modal");
+
             $("#" + id).modal("hide");
+            $("body").css("overflow-y", "scroll"); 
         }
 
         window.openModal = function (id) {
+            console.log("open modal");
+            
             $("#" + id).modal({ backdrop: "static", keyboard: false });
+            $("body").css("overflow-y", "hidden"); 
 
             if (player) {
                 player.playVideo();

@@ -4,11 +4,10 @@
 
 @inject IJSRuntime jsRuntime
 
-<div class="modal fade modal-tall" id="ytModal" tabindex="-1" role="dialog" aria-hidden="true" style="padding-right: 22px !important">
+<div class="modal fade modal-tall" id="ytModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog mw-100" role="document" style="width: 100% !important;">
         <div class="modal-content">
             <div class="modal-header">
-
                 @if (String.IsNullOrEmpty(SelectedVideo.Group) || SelectedVideo.Group == "Recently Played")
                 {
                     <div style="margin-right: 25px;" class="btn-group-toggle" data-toggle="buttons" @onclick=@OnAddToFavoritesButtonToggle>
@@ -64,9 +63,9 @@
             {
                 AddToFavorites = true;
             }
-        }
 
-        await OpenModal();
+            await OpenModal();
+        }        
     }
 
     public async void OnModalCloseClicked()
