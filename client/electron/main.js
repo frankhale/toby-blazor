@@ -10,7 +10,7 @@ function createWindow() {
     titleBarStyle: "hidden"
   });
   win.removeMenu();
-  win.loadURL("https://localhost:5001");
+  win.loadURL("http://localhost:5001");
   //win.webContents.openDevTools();
 
   win.on("closed", () => {
