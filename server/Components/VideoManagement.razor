@@ -9,8 +9,10 @@
             <button type="button" class="btn btn-danger" disabled=@DeleteButtonDisabled @onclick=@OnDeleteButtonClicked>Delete</button>
         </div>
         <div class="form-inline">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" @bind=@SearchTerm>
-            <button class="btn btn-success my-2 my-sm-0" @onclick=@OnSearchButtonClicked>Search</button>
+            <form @onsubmit=@OnSearchButtonClicked>
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" @bind=@SearchTerm>
+                <button class="btn btn-success my-2 my-sm-0" type="submit" @onclick=@OnSearchButtonClicked>Search</button>
+            </form>
         </div>
     </nav>
 
@@ -63,6 +65,18 @@
     private string GetVideoThumbnail(string ytid)
     {
         return String.Format("https://i.ytimg.com/vi/{0}/default.jpg", ytid);
+    }
+
+    private void Search(string searchTerm)
+    {
+        if (!String.IsNullOrEmpty(searchTerm))
+        {
+            Videos = searchTerm switch
+            {
+                _ when searchTerm.ToLower().StartsWith("/all") => videos.AllVideos(),
+                _ => videos.Find(searchTerm)
+            };
+        }
     }
 
     private void OnMenuItemSelected(Video video, string group)
@@ -145,9 +159,6 @@
 
     private void OnSearchButtonClicked()
     {
-        if (!String.IsNullOrEmpty(SearchTerm))
-        {
-            Videos = videos.Find(SearchTerm);
-        }
+        Search(SearchTerm);
     }
 }

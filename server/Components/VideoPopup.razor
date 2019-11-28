@@ -11,15 +11,14 @@
                 @if (String.IsNullOrEmpty(SelectedVideo.Group) || SelectedVideo.Group == "Recently Played")
                 {
                     <div style="margin-right: 25px;" class="btn-group-toggle" data-toggle="buttons" @onclick=@OnAddToFavoritesButtonToggle>
-                        <label class="btn btn-secondary @(AddToFavorites ? "active" : "")">
-                            <input type="checkbox" checked autocomplete="off">
+                        <label class="btn btn-light @(AddToFavorites ? "active" : "")">
                             @if (AddToFavorites)
                             {
-                                <i class="fa fa-star" aria-hidden="true"></i>
+                                <img src="css/bootstrap/icons/star-fill.svg" width="16" height="16" />
                             }
                             else
                             {
-                                <i class="fa fa-star-o" aria-hidden="true"></i>
+                                <img src="css/bootstrap/icons/star.svg" width="16" height="16" />
                             }
                         </label>
                     </div>
@@ -50,8 +49,6 @@
     private readonly IVideoRepository videos = new VideoRepository();
 
     private bool AddToFavorites = false;
-    private string unselectedStar = "fa fa-star-o";
-    private string selectedStar = "fa fa-star";
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -65,7 +62,7 @@
             }
 
             await OpenModal();
-        }        
+        }
     }
 
     public async void OnModalCloseClicked()
@@ -85,11 +82,13 @@
         {
             AddToFavorites = true;
             videos.Add(SelectedVideo, "Favorites");
+            Console.WriteLine("Added {0} To Favorites", SelectedVideo.Title);
         }
         else
         {
             AddToFavorites = false;
-            videos.Delete(SelectedVideo.YTId);
+            videos.Delete(SelectedVideo.YTId, "Favorites");
+            Console.WriteLine("Removed {0} From Favorites", SelectedVideo.Title);
         }
     }
 }

@@ -16,7 +16,7 @@ namespace TobyBlazor.Data
         public Video FindByYTId(string ytid, string group);
         public void Add(Video v, string group);
         public void AddToRecentlyPlayed(Video video);
-        public void Delete(string ytid);
+        public void Delete(string ytid, string group);
         public void DeleteRange(List<Video> videos);
         public void UpdateGroup(string ytid, string group);        
     }

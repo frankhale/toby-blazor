@@ -64,7 +64,7 @@ namespace TobyBlazor.Data
             Console.WriteLine("Total Number of Recently Played Videos = {0}", db.Videos.Where(x => x.Group == "Recently Played").Count());
         }
 
-        public void Delete(string ytid)
+        public void Delete(string ytid, string group)
         {
             if (String.IsNullOrEmpty(ytid)) return;
 

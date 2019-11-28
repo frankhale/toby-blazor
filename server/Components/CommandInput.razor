@@ -5,31 +5,43 @@
 
 @inject IJSRuntime jsRuntime
 
-<input type="text" class="form-control" id="commandInput" placeholder="Search..."
-       @onchange=@(newValue => CommandChanged(newValue.Value.ToString()))
-       onchange-prevent-default />
+<div class="input-group mb-3">
+    <div class="input-group-prepend">
+        <span class="input-group-text">
+            <img src="css/bootstrap/icons/search.svg" width="16" height="16" title="Search">
+        </span>
+    </div>
+    <input class="form-control mw-100 w-100" type="search" placeholder="Search" aria-label="Search"
+           @bind=@SearchTerm
+           @onkeyup=@(eventArgs => OnKeyPress(eventArgs.Key)) />
+</div>
 
 @code {
     private readonly IVideoRepository videos = new VideoRepository();
 
+    private string SearchTerm { get; set; } = "";
+
     [Parameter]
     public EventCallback<SearchResult> OnSearch { get; set; }
 
-    private async void CommandChanged(string term)
+    private async void OnKeyPress(string key)
     {
-        var result = new SearchResult();
+        if (key == "Enter" && !String.IsNullOrEmpty(SearchTerm))
+        {
+            var result = new SearchResult();
 
-        if (term.StartsWith("/manage") || term.StartsWith("/mg"))
-        {
-            result.Manage = true;
-            result.Videos = videos.AllVideos();
+            if (SearchTerm.StartsWith("/manage") || SearchTerm.StartsWith("/mg"))
+            {
+                result.Manage = true;
+                result.Videos = videos.AllVideos();
+            }
+            else
+            {
+                result.Manage = false;
+                result.Videos = await videos.Search(SearchTerm);
+            }
+
+            await OnSearch.InvokeAsync(result);
         }
-        else
-        {
-            result.Manage = false;
-            result.Videos = await videos.Search(term);
-        }
-        
-        await OnSearch.InvokeAsync(result);
     }
 }
