@@ -29,9 +29,14 @@ NOTE: If you want to search YouTube you'll need a YouTube Data API key. This
 code needs to be added to an environment variable on your machine called
 `YOUTUBE_API_KEY`.
 
+To obtain a YouTube Data API key you need a Google account and need to go to
+[Google's developer console](https://console.developers.google.com/) to obtain
+one.
+
 Search commands:
 
 - `/all` or `/ls`: lists all videos in the database
+- `/clear`: clear search results
 - `/crp` or `/clear-recently-played`: clear recently played
 - `/group [name]` or `/g [name]`: lists videos in a specific group
 - `/favorites` or `/fav`: list favorite videos
@@ -42,6 +47,8 @@ Search commands:
 
 **NOTE:** When using `manage` there is a search box to search within the videos
 you are managing. You can use `/all` to show all videos after a narrow search.
+
+The Recently Played videos are limited to 30 videos.
 
 ## Screenshots
 
@@ -54,7 +61,7 @@ you are managing. You can use `/all` to show all videos after a narrow search.
 ## Folder Layout
 
 - server: Blazor server-side project
-- client: This is just quick and dirty driver to open `toby-blazor` in NW.js
+- client: Electron and NW.js drivers (soon [Web Window support](https://blog.stevensanderson.com/2019/11/18/2019-11-18-webwindow-a-cross-platform-webview-for-dotnet-core/))
 
 ## Author(s)
 
@@ -62,7 +69,7 @@ Frank Hale &lt;frankhale@gmail.com&gt;
 
 ## Date
 
-28 November 2019
+29 November 2019
 
 ## License
 

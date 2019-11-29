@@ -5,15 +5,19 @@
 
 @inject IJSRuntime jsRuntime
 
+
 <CommandInput OnSearch=@OnSearchResults />
 
-@if(Result.Type == SearchResultType.Manage) {
+@if (Result.Type == SearchResultType.Manage)
+{
     <VideoManagement />
-} else if (Result.Type == SearchResultType.Search) {
+}
+else if (Result.Type == SearchResultType.Search)
+{
     <VideoList Videos=@Result.Videos />
 }
 
-@if(Result.Message != null && !String.IsNullOrEmpty(Result.Message.Value))
+@if (Result.Message != null && !String.IsNullOrEmpty(Result.Message.Value))
 {
     <Notification Message=@Result.Message.Value NotificationType=@Result.Message.Type OnClose=@OnNotificationClose />
 }
@@ -38,7 +42,7 @@
 
     public void OnNotificationClose()
     {
-        if(Result != null)
+        if (Result != null)
         {
             Result = new SearchResult();
         }

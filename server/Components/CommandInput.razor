@@ -58,11 +58,12 @@
 
             var result =searchValue switch
             {
-                _ when MatchesCommandList(searchValue[0], "/t", "/test") =>
-                    CreateResult(SearchResultType.Command,
-                    () => {
-                        return new Message() { Value = "This is a test message...", Type = "alert-warning" };
-                    }),
+                //_ when MatchesCommandList(searchValue[0], "/t", "/test") =>
+                //    CreateResult(SearchResultType.Command,
+                //    () => {
+                //        return new Message() { Value = "This is a test message...", Type = "alert-warning" };
+                //    }),
+                _ when MatchesCommandList(searchValue[0], "/clear") => CreateResult(SearchResultType.Search, new List<Video>()),
                 _ when MatchesCommandList(searchValue[0], "/mg", "/manage") => CreateResult(SearchResultType.Manage, videos.AllVideos()),
                 _ when MatchesCommandList(searchValue[0], "/crp", "/clear-recently-played") =>
                     CreateResult(SearchResultType.Command,

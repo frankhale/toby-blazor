@@ -11,7 +11,7 @@
                 @if (String.IsNullOrEmpty(SelectedVideo.Group) || SelectedVideo.Group == "Recently Played")
                 {
                     <div style="margin-right: 25px;" class="btn-group-toggle" data-toggle="buttons" @onclick=@OnAddToFavoritesButtonToggle>
-                        <label class="btn btn-light @(AddToFavorites ? "active" : "")">
+                        <label class="btn btn-secondary @(AddToFavorites ? "active" : "")">
                             @if (AddToFavorites)
                             {
                                 <img src="css/bootstrap/icons/star-fill.svg" width="16" height="16" style="filter: invert(100%);" />
@@ -61,19 +61,19 @@
                 AddToFavorites = true;
             }
 
-            await OpenModal();
+            await OpenModal();            
         }
     }
 
     public async void OnModalCloseClicked()
     {
-        await jsRuntime.InvokeVoidAsync("closeModal", "ytModal");
+        await jsRuntime.InvokeVoidAsync("closeModal", "ytModal");        
         await OnPopupClosed.InvokeAsync(EventCallback.Empty);
     }
 
     private async Task OpenModal()
     {
-        await jsRuntime.InvokeVoidAsync("openModal", "ytModal");
+        await jsRuntime.InvokeVoidAsync("openModal", "ytModal");        
     }
 
     public void OnAddToFavoritesButtonToggle()
