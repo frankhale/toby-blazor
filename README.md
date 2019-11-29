@@ -16,8 +16,13 @@ We are using SQLite with Entity Framework Core which makes it drop dead easy to
 interface with our database. I'm using [DB Browser](https://sqlitebrowser.org/)
 as a way to manage the db graphically.
 
-I'm using the latest Visual Studio 2019 Preview
-with .NET Core 3.1 preview3 to compile and run this.
+The UI is built with Bootstrap. I'm using Bootstrap directly at the moment
+instead of using libraries such as [BlazorStrap](https://github.com/chanan/BlazorStrap)
+or [Blazorise](https://github.com/stsrki/Blazorise). This may change in the
+future.
+
+I'm using the latest Visual Studio 2019 Preview with .NET Core 3.1 preview3 to
+compile and run this.
 
 ## Usage
 

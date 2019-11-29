@@ -128,20 +128,18 @@
         }
 
         window.closeModal = function (id) {
-            console.log("close modal");
-
             $("#" + id).modal("hide");
-            $("body").css("overflow-y", "scroll");
+            $("body").css("overflow-y", "auto");
+            toggleMainUI();
         }
 
         window.openModal = function (id) {
-            console.log("open modal");
-
             $("#" + id).modal({ backdrop: "static", keyboard: false });
             $("body").css("overflow-y", "hidden");
+            toggleMainUI();
 
             if (player) {
-                player.playVideo();
+                player.playVideo();                
             }
         }
 
@@ -149,9 +147,15 @@
             $("#" + id).on("hidden.bs.modal", function () {
                 if (player) {
                     player.stopVideo();
+                    
                 }
             });
         }
+
+        window.toggleMainUI = function () {
+            $("#main-ui").toggle();
+        }
+
     </script>
 
     <app>

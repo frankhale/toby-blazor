@@ -1,20 +1,32 @@
 ﻿@page "/"
 
+@using System.Net
 @using TobyBlazor.Models
 @using TobyBlazor.Data
 
 @inject IJSRuntime jsRuntime
 
+<div id="main-ui">
+    <CommandInput OnSearch=@OnSearchResults />
 
-<CommandInput OnSearch=@OnSearchResults />
+    @if (Result.Type == SearchResultType.Manage)
+    {
+        <VideoManagement />
+    }
+    else if (Result.Type == SearchResultType.Search)
+    {
+        <VideoList Videos=@Result.Videos OnSelectedVideo=@OnSelectedVideo />
+    }
+</div>
 
-@if (Result.Type == SearchResultType.Manage)
+@if (SelectedVideo != null && !String.IsNullOrEmpty(SelectedVideo.YTId))
 {
-    <VideoManagement />
+    <WindowTitle Title=@WebUtility.HtmlDecode(SelectedVideo.Title) />
+    <VideoPopup SelectedVideo=@SelectedVideo OnPopupClosed=@OnVideoDismissed />
 }
-else if (Result.Type == SearchResultType.Search)
+else
 {
-    <VideoList Videos=@Result.Videos />
+    <WindowTitle Title="Toby" />
 }
 
 @if (Result.Message != null && !String.IsNullOrEmpty(Result.Message.Value))
@@ -24,8 +36,8 @@ else if (Result.Type == SearchResultType.Search)
 
 @code {
     private readonly IVideoRepository videos = new VideoRepository();
-
     private SearchResult Result { get; set; } = new SearchResult();
+    private Video SelectedVideo { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -46,5 +58,15 @@ else if (Result.Type == SearchResultType.Search)
         {
             Result = new SearchResult();
         }
+    }
+
+    public void OnSelectedVideo(Video video)
+    {
+        SelectedVideo = video;
+    }
+
+    public void OnVideoDismissed()
+    {
+        SelectedVideo = null;
     }
 }

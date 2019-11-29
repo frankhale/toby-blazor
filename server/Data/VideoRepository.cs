@@ -37,9 +37,7 @@ namespace TobyBlazor.Data
 
       var allRPVideos = db.Videos.Where(x => x.Group == "Recently Played")
                                  .OrderByDescending(x => x.CreateDate)
-                                 .ToList();
-
-      //allRPVideos.ForEach(x => Console.WriteLine(x.CreateDate.ToString()));
+                                 .ToList();      
 
       if (allRPVideos.Count == 30)
       {
@@ -60,8 +58,6 @@ namespace TobyBlazor.Data
         CreateDate = DateTime.Now
       });
       db.SaveChanges();
-
-      Console.WriteLine("Total Number of Recently Played Videos = {0}", db.Videos.Where(x => x.Group == "Recently Played").Count());
     }
 
     public void Delete(string ytid, string group)
@@ -95,23 +91,27 @@ namespace TobyBlazor.Data
     public List<Video> Find(string like)
     {
       return db.Videos.Where(x => x.Title.ToLower().Contains(like.ToLower()) && x.Group != "Recently Played")
+                      .OrderBy(x => x.Title)
                       .ToList();
     }
 
     public List<Video> FindByGroup(string group)
     {
       return db.Videos.Where(x => x.Group.ToLower() == group.ToLower())
+                      .OrderBy(x => x.Title)
                       .ToList();
     }
 
     public Video FindByYTId(string ytid)
     {
-      return db.Videos.Where(x => x.YTId == ytid && x.Group != "Recently Played").FirstOrDefault();
+      return db.Videos.Where(x => x.YTId == ytid && x.Group != "Recently Played")
+                      .FirstOrDefault();
     }
 
     public Video FindByYTId(string ytid, string group)
     {
-      return db.Videos.Where(x => x.YTId == ytid && x.Group == group).FirstOrDefault();
+      return db.Videos.Where(x => x.YTId == ytid && x.Group == group)
+                      .FirstOrDefault();
     }
 
     public List<Video> AllVideos()
@@ -123,7 +123,7 @@ namespace TobyBlazor.Data
 
     public List<Group> AllGroups()
     {
-      return db.Groups.OrderBy(x => x.Name)
+      return db.Groups.OrderBy(x => x.Name)                      
                       .ToList();
     }
 

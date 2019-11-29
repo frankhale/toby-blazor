@@ -1,6 +1,6 @@
-﻿@using TobyBlazor.Models
+﻿@using System.Net
+@using TobyBlazor.Models
 @using TobyBlazor.Data
-@using System.Net
 
 <div style="margin-top:25px;">
     <div class="list-group">
@@ -14,33 +14,39 @@
     </div>
 </div>
 
-@if (SelectedVideo != null && !String.IsNullOrEmpty(SelectedVideo.YTId))
-{
-    <WindowTitle Title=@WebUtility.HtmlDecode(SelectedVideo.Title) />
-    <VideoPopup SelectedVideo=@SelectedVideo OnPopupClosed=@OnVideoDismissed />
-}
-else
-{
-    <WindowTitle Title="Toby" />
-}
-
 @code {
     [Parameter]
     public List<Video> Videos { get; set; }
 
-    private readonly IVideoRepository videos = new VideoRepository();
+    [Parameter]
+    public EventCallback<Video> OnSelectedVideo { get; set; }
 
-    private Video SelectedVideo;
+    [Parameter]
+    public bool ClearSelection { get; set; } = true;
+
+    private readonly IVideoRepository videos = new VideoRepository();
+    private Video SelectedVideo { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // This is not a very good solution to clear the currently selected 
+        // video but we'll use it for now until something better comes along.
+        if(ClearSelection)
+        {
+            await Task.Run(() => { SelectedVideo = null; });
+        }
+    }
 
     private string GetVideoThumbnail(string ytid)
     {
         return String.Format("https://i.ytimg.com/vi/{0}/default.jpg", ytid);
     }
 
-    private void VideoSelected(Video video)
+    private async Task VideoSelected(Video video)
     {
         SelectedVideo = video;
         videos.AddToRecentlyPlayed(video);
+        await OnSelectedVideo.InvokeAsync(video);
     }
 
     public void OnVideoDismissed()

@@ -38,7 +38,7 @@
                     await jsRuntime.InvokeAsync<string>("playVideo", VideoId);
                     _timer.Dispose();
                 }
-            }, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
+            }, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(500));
         }
     }
 }
