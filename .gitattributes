@@ -2,8 +2,11 @@
 * text=auto
 
 # Custom for Visual Studio
-*.cs     diff=csharp
-*.razor  diff=csharp
+*.cs     linguist-language=csharp
+*.razor  linguist-language=csharp
+*.html   linguist-detectable=false
+*.css    linguist-detectable=false
+*.js     linguist-detectable=false
 
 # Standard to msysgit
 *.doc	 diff=astextplain
