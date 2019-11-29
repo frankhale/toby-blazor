@@ -30,10 +30,19 @@
         {
             var result = new SearchResult();
 
+            // This needs changing!!!
             if (SearchTerm.StartsWith("/manage") || SearchTerm.StartsWith("/mg"))
             {
                 result.Manage = true;
                 result.Videos = videos.AllVideos();
+            }
+            else if (SearchTerm.StartsWith("/crp") || SearchTerm.StartsWith("/clear-recently-played"))
+            {
+                videos.DeleteRangeByGroup("Recently Played");
+                // This is just dumb
+                // We need a way to report back what happened so we can display
+                // a notification
+                result.Videos = new List<Video>();
             }
             else
             {
