@@ -38,7 +38,7 @@ Search commands:
 - `/manage` or `/mg`: video management
 - `/recently-played` or `/rp`: list all recently played videos
 - `[search term]`: search locally for video
-- `/youtube [name hint]` or `/yt [name hint]`: search YouTube for videos
+- `/youtube [search term]` or `/yt [search term]`: search YouTube for videos
 
 **NOTE:** When using `manage` there is a search box to search within the videos
 you are managing. You can use `/all` to show all videos after a narrow search.
