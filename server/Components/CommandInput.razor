@@ -3,8 +3,6 @@
 @using TobyBlazor.Data
 @using TobyBlazor.Models
 
-@inject IJSRuntime jsRuntime
-
 <div class="input-group mb-3">
     <div class="input-group-prepend">
         <span class="input-group-text">
@@ -12,6 +10,7 @@
         </span>
     </div>
     <input class="form-control mw-100 w-100" type="search" placeholder="Search" aria-label="Search"
+           spellcheck="false"
            @bind=@SearchTerm
            @onkeyup=@(eventArgs => OnKeyPress(eventArgs.Key)) />
 </div>
@@ -24,31 +23,56 @@
     [Parameter]
     public EventCallback<SearchResult> OnSearch { get; set; }
 
+    private SearchResult CreateResult(SearchResultType type, Func<Message> action)
+    {
+        return CreateResult(type, null, null, action);
+    }
+
+    private SearchResult CreateResult(SearchResultType type, List<Video> videos)
+    {
+        return CreateResult(type, null, videos, null);
+    }
+
+    private SearchResult CreateResult(SearchResultType type, Message message, List<Video> videos, Func<Message> action) {
+        var result = new SearchResult();
+
+        if(action != null) {
+            result.Message = action();
+        } else {
+            result.Message = message;
+        }
+
+        result.Type = type;
+        result.Videos = videos;
+
+        return result;
+    }
+
     private async void OnKeyPress(string key)
     {
+        static bool MatchesCommandList(string value, params string[] commands) => (commands.Where(x => x == value).FirstOrDefault() != null) ? true : false;
+
         if (key == "Enter" && !String.IsNullOrEmpty(SearchTerm))
         {
-            var result = new SearchResult();
+            var searchValue = SearchTerm.ToLower().Split(new char[] { ' ' }, 2);
 
-            // This needs changing!!!
-            if (SearchTerm.StartsWith("/manage") || SearchTerm.StartsWith("/mg"))
+            var result =searchValue switch
             {
-                result.Manage = true;
-                result.Videos = videos.AllVideos();
-            }
-            else if (SearchTerm.StartsWith("/crp") || SearchTerm.StartsWith("/clear-recently-played"))
-            {
-                videos.DeleteRangeByGroup("Recently Played");
-                // This is just dumb
-                // We need a way to report back what happened so we can display
-                // a notification
-                result.Videos = new List<Video>();
-            }
-            else
-            {
-                result.Manage = false;
-                result.Videos = await videos.Search(SearchTerm);
-            }
+                _ when MatchesCommandList(searchValue[0], "/t", "/test") =>
+                    CreateResult(SearchResultType.Command,
+                    () => {
+                        return new Message() { Value = "This is a test message...", Type = "alert-warning" };
+                    }),
+                _ when MatchesCommandList(searchValue[0], "/mg", "/manage") => CreateResult(SearchResultType.Manage, videos.AllVideos()),
+                _ when MatchesCommandList(searchValue[0], "/crp", "/clear-recently-played") =>
+                    CreateResult(SearchResultType.Command,
+                        () => {
+                            videos.DeleteRangeByGroup("Recently Played");
+                            return new Message() { Value = "Deleted all the videos in the Recently Played group", Type = "alert-danger" };
+                        }
+                    ),
+                _ => CreateResult(SearchResultType.Search, await videos.Search(SearchTerm))
+            };
 
             await OnSearch.InvokeAsync(result);
         }

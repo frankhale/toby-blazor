@@ -1,11 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace TobyBlazor.Models
 {
+    public enum SearchResultType
+    {
+        Command,
+        Manage,
+        Search
+    }
+
     public class SearchResult
     {
-        public List<Video> Videos { get; set; }
-        public bool Manage { get; set; }
-     }
+        public SearchResultType Type { get; set; }
+        public List<Video> Videos { get; set; } = new List<Video>();
+        public Message Message { get; set; } = new Message();
+    }
 }

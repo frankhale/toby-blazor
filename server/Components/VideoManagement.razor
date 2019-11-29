@@ -139,6 +139,15 @@
                 videos.DeleteRange(deleteVideos);
                 VideosToDelete = new List<string>();
                 DeleteButtonDisabled = true;
+
+                if (!String.IsNullOrEmpty(SearchTerm))
+                { 
+                    Search(SearchTerm);
+                }
+                else
+                {
+                    Videos = videos.AllVideos();
+                }
             }
         }
     }

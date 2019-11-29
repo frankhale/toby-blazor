@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <base href="~/" />
-    <link rel="stylesheet" href="css/bootstrap/cyborg-bootstrap.min.css" />    
+    <link rel="stylesheet" href="css/bootstrap/cyborg-bootstrap.min.css" />
 
     <link href="css/site.css" rel="stylesheet" />
 
@@ -51,6 +51,14 @@
         .modal-open {
             overflow: auto;
             padding-right: 0 !important;
+        }
+
+        /* Credit: https://codepen.io/leenawat/pen/ORPbqE */
+        .alert-bottom {
+            position: fixed;
+            bottom: 5px;
+            left: 2%;
+            width: 96%;
         }
     </style>
 </head>
@@ -138,7 +146,7 @@
         }
 
         window.setModalCloseStopVideo = function (id) {
-            $('#' + id).on("hidden.bs.modal", function () {
+            $("#" + id).on("hidden.bs.modal", function () {
                 if (player) {
                     player.stopVideo();
                 }

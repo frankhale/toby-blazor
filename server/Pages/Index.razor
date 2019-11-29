@@ -7,23 +7,21 @@
 
 <CommandInput OnSearch=@OnSearchResults />
 
-@if (SearchResults.Count > 0)
+@if(Result.Type == SearchResultType.Manage) {
+    <VideoManagement />
+} else if (Result.Type == SearchResultType.Search) {
+    <VideoList Videos=@Result.Videos />
+}
+
+@if(Result.Message != null && !String.IsNullOrEmpty(Result.Message.Value))
 {
-    @if (Manage)
-    {
-        <VideoManagement />
-    }
-    else
-    {
-        <VideoList Videos=@SearchResults />
-    }
+    <Notification Message=@Result.Message.Value NotificationType=@Result.Message.Type OnClose=@OnNotificationClose />
 }
 
 @code {
     private readonly IVideoRepository videos = new VideoRepository();
 
-    public List<Video> SearchResults = new List<Video>();
-    public bool Manage = false;
+    private SearchResult Result { get; set; } = new SearchResult();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -35,7 +33,14 @@
 
     public void OnSearchResults(SearchResult result)
     {
-        SearchResults = result.Videos;
-        Manage = result.Manage;
+        Result = result;
+    }
+
+    public void OnNotificationClose()
+    {
+        if(Result != null)
+        {
+            Result = new SearchResult();
+        }
     }
 }
