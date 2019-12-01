@@ -15,7 +15,13 @@
     }
     else if (Result.Type == SearchResultType.Search)
     {
-        <VideoList Videos=@Result.Videos OnSelectedVideo=@OnSelectedVideo />
+        @*<VideoList Videos=@Result.Videos OnSelectedVideo=@OnSelectedVideo />*@
+
+        <VideoPagination Videos=@Result.Videos>
+            <Content>
+                <VideoList Videos=@context OnSelectedVideo=@OnSelectedVideo />
+            </Content>
+        </VideoPagination>
     }
 </div>
 

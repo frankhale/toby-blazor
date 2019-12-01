@@ -29,9 +29,9 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        // This is not a very good solution to clear the currently selected 
+        // This is not a very good solution to clear the currently selected
         // video but we'll use it for now until something better comes along.
-        if(ClearSelection)
+        if (ClearSelection)
         {
             await Task.Run(() => { SelectedVideo = null; });
         }
