@@ -2,36 +2,39 @@
 
 @typeparam Video
 
-@if (PageIndices.Count > 0)
+@if (Pages.Count > 0)
 {
-    <nav aria-label="Video page navigation">
-        <ul class="pagination justify-content-center">
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Previous" @onclick=@OnPreviousButtonClick>
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-
-            @foreach (var i in PageIndices[CurrentPageLinkPage - 1])
-            {
-                <li class="page-item @(CurrentPage == i ? "active" : "")">
-                    <button class="page-link" @onclick=@(eventArgs => OnPageButtonClick(i))>
-                        @i
-                    </button>
+    if (Pages.Count > 1)
+    {
+        <nav aria-label="Video page navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Previous" @onclick=@OnPreviousButtonClick>
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
                 </li>
-            }
 
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next" @onclick=@OnNextButtonClick>
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-        </ul>
+                @foreach (var i in PageIndices[CurrentPageLinkPage - 1])
+                {
+                    <li class="page-item @(CurrentPage == i ? "active" : "")">
+                        <button class="page-link" @onclick=@(eventArgs => OnPageButtonClick(i))>
+                            @i
+                        </button>
+                    </li>
+                }
 
-        <div>
-            @Content(Pages[CurrentPage - 1])
-        </div>
-    </nav>
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next" @onclick=@OnNextButtonClick>
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    }
+
+    <div>
+        @Content(Pages[CurrentPage - 1])
+    </div>
 }
 else
 {
@@ -79,6 +82,7 @@ else
 
         //Console.WriteLine("Total Videos = {0}", Videos.Count);
         //Console.WriteLine("Total Pages = {0}", Pages.Count);
+        //Console.WriteLine("Total Page Indicies = {0}", PageIndices.Count);
         //Console.WriteLine("Total Link Pages = {0}", Pages.Count / ChunkSize);
         //Console.WriteLine("Total Links Left Over = {0}", Pages.Count % ChunkSize);
     }
