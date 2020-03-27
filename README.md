@@ -21,9 +21,6 @@ instead of using libraries such as [BlazorStrap](https://github.com/chanan/Blazo
 or [Blazorise](https://github.com/stsrki/Blazorise). This may change in the
 future.
 
-I'm using the latest Visual Studio 2019 Preview with .NET Core 3.1 preview3 to
-compile and run this.
-
 ## Usage
 
 NOTE: Currently the database shipping in the repo is a slighly modified one from
@@ -74,7 +71,7 @@ Frank Hale &lt;frankhale@gmail.com&gt;
 
 ## Date
 
-1 December 2019
+27 March 2019
 
 ## License
 
