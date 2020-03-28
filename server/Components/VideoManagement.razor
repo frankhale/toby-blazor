@@ -11,9 +11,15 @@
         <div class="form-inline">
             <form @onsubmit=@OnSearchButtonClicked>
                 <div class="input-group">
-                    <input type="text" class="form-control" @bind=@SearchTerm placeholder="Search for video..." aria-label="Search for video" aria-describedby="button-addon4"> 
+                    <input type="text" 
+                           class="form-control"                            
+                           placeholder="Search for video..." 
+                           aria-label="Search for video" 
+                           aria-describedby="button-addon4"
+                           @bind-value=@SearchTerm                           
+                           @oninput=@OnSearchTermChanged>
                     <div class="input-group-append" id="button-addon4">                        
-                        <button class="btn btn btn-success" type="button" @onclick=@OnSearchButtonClicked>Search</button>
+                        <button class="btn btn btn-success" type="button" @onclick=@OnSearchButtonClicked disabled=@SearchButtonDisabled>Search</button>
                     </div>
                 </div>
             </form>
@@ -54,8 +60,31 @@
     private readonly IVideoRepository videos = new VideoRepository();
 
     private string SearchTerm { get; set; } = String.Empty;
+
+    [Parameter]
+    public EventCallback<string> SearchTermChanged { get; set; }
+
+    private Task OnSearchTermChanged(ChangeEventArgs e)
+    {
+        SearchTerm = e.Value.ToString();
+
+        if (!string.IsNullOrEmpty(SearchTerm))
+        {
+            SearchButtonDisabled = false;
+        }
+        else
+        {
+            SearchButtonDisabled = true;
+
+            Videos = videos.AllVideos();            
+        }
+
+        return SearchTermChanged.InvokeAsync(SearchTerm);
+    }
+
     private bool DeleteButtonDisabled { get; set; } = true;
     private bool ApplyButtonDisabled { get; set; } = true;
+    private bool SearchButtonDisabled { get; set; } = true;
 
     private List<Video> Videos { get; set; } = new List<Video>();
     private List<string> VideosToDelete = new List<string>();
@@ -145,7 +174,7 @@
                 DeleteButtonDisabled = true;
 
                 if (!String.IsNullOrEmpty(SearchTerm))
-                { 
+                {
                     Search(SearchTerm);
                 }
                 else
