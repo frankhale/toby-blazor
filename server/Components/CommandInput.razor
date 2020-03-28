@@ -23,10 +23,12 @@
     [Parameter]
     public EventCallback<SearchResult> OnSearch { get; set; }
 
+    //FIXME: THIS IS LITERALLY THE DUMBEST CODE I'VE EVERY WRITTEN (eg. GET RID OF ThrowAwayDataItem>)
     public class ThrowAwayDataItem : IDataItem { }
 
     private SearchResult CreateResult(SearchResultType type, Func<Message> action)
     {
+        //FIXME: THIS IS LITERALLY THE DUMBEST CODE I'VE EVERY WRITTEN (eg. GET RID OF ThrowAwayDataItem>)
         return CreateResult<ThrowAwayDataItem>(type, null, null, action);
     }
 

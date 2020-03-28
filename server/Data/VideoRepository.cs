@@ -88,6 +88,12 @@ namespace TobyBlazor.Data
             }
         }
 
+        public Group FindGroupByName(string name)
+        {
+            return db.Groups.Where(x => x.Name == name)
+                            .FirstOrDefault();
+        }
+
         public List<Group> FindGroup(string like)
         {
             return db.Groups.Where(x => x.Name.ToLower().Contains(like.ToLower()))
@@ -137,9 +143,25 @@ namespace TobyBlazor.Data
                 .ToList();
         }
 
+        public void DeleteGroup(string name)
+        {
+            if (String.IsNullOrEmpty(name)) return;
+
+            var found = db.Groups.Where(x => x.Name == name).FirstOrDefault();
+
+            db.Groups.Remove(found);
+            db.SaveChanges();
+        }
+
+        public void DeleteGroupRange(List<Group> groups)
+        {
+            db.Groups.RemoveRange(groups);
+            db.SaveChanges();
+        }
+
         public void AddGroup(string name)
         {
-            var groupExists = db.Groups.Where(x => x.Name == name).FirstOrDefault();
+            var groupExists = db.Groups.Where(x => x.Name.ToLower() == name.ToLower()).FirstOrDefault();
 
             if (groupExists == null)
             {
@@ -147,6 +169,7 @@ namespace TobyBlazor.Data
                 {
                     Name = name
                 });
+                db.SaveChanges();
             }
         }
 

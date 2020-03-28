@@ -15,7 +15,8 @@
                            placeholder="Type group name here..."
                            aria-label="Add group or search for group"
                            aria-describedby="button-addon4"
-                           @oninput="eventArgs => OnTextEntered(eventArgs.Value.ToString())">
+                           @bind-value=@SearchTerm                           
+                           @oninput=@OnSearchTermChanged>
                     <div class="input-group-append" id="button-addon4">
                         <button class="btn btn-info" type="button" @onclick=@OnAddButtonClicked disabled=@AddButtonDisabled>Add</button>
                         <button class="btn btn-success" type="button" @onclick=@OnSearchButtonClicked disabled=@SearchButtonDisabled>Search</button>
@@ -30,7 +31,7 @@
         {
             <div class="list-group-item d-flex justify-content-between align-items-center">
                 <div style="margin-left: 10px; margin-right:10px; margin-bottom: 30px;">
-                    <input type="checkbox" class="form-check-input" @onchange="eventArgs => OnCheckboxClicked(group.Name, eventArgs.Value)" />
+                    <input type="checkbox" @key=@group.Name class="form-check-input" @onchange="eventArgs => OnCheckboxClicked(group.Name, eventArgs.Value)" />
                 </div>
                 <div class="w-100"><h5>@group.Name</h5></div>
             </div>
@@ -41,7 +42,31 @@
 @code {
     private readonly IVideoRepository videos = new VideoRepository();
 
-    private string SearchTerm { get; set; } = String.Empty;
+    private string SearchTerm;
+
+    [Parameter]
+    public EventCallback<string> SearchTermChanged { get; set; }
+
+    private Task OnSearchTermChanged(ChangeEventArgs e)
+    {
+        SearchTerm = e.Value.ToString();
+
+        if (!string.IsNullOrEmpty(SearchTerm))
+        {
+            AddButtonDisabled = false;
+            SearchButtonDisabled = false;
+        }
+        else
+        {
+            AddButtonDisabled = true;
+            SearchButtonDisabled = true;
+
+            Groups = videos.AllGroups();
+        }
+
+        return SearchTermChanged.InvokeAsync(SearchTerm);
+    }
+
     private string NewGroupName { get; set; } = String.Empty;
     private bool DeleteButtonDisabled { get; set; } = true;
     private bool AddButtonDisabled { get; set; } = true;
@@ -64,24 +89,6 @@
                 _ when searchTerm.ToLower().StartsWith("/all") => videos.AllGroups(),
                 _ => videos.FindGroup(searchTerm)
             };
-        }
-    }
-
-    private void OnTextEntered(string value)
-    {
-        SearchTerm = value;
-
-        if (!string.IsNullOrEmpty(value))
-        {
-            AddButtonDisabled = false;
-            SearchButtonDisabled = false;
-        }
-        else
-        {
-            AddButtonDisabled = true;
-            SearchButtonDisabled = true;
-
-            Groups = videos.AllGroups();
         }
     }
 
@@ -113,43 +120,31 @@
 
             GroupsToDelete.ForEach(x =>
             {
-                //var foundVideo = videos.FindVideoByYTId(x);
-                //if (foundVideo != null)
-                //{
-                //    deleteVideos.Add(foundVideo);
-                //}
+                var foundGroup = videos.FindGroupByName(x);
+                if (foundGroup != null)
+                {
+                    deleteGroups.Add(foundGroup);
+                }
             });
 
             if (deleteGroups.Count > 0)
             {
-                //videos.DeleteVideoRange(deleteVideos);
-                //VideosToDelete = new List<string>();
-                //DeleteButtonDisabled = true;
+                videos.DeleteGroupRange(deleteGroups);
+                GroupsToDelete = new List<string>();
+                DeleteButtonDisabled = true;
 
-                //if (!String.IsNullOrEmpty(SearchTerm))
-                //{
-                //    Search(SearchTerm);
-                //}
-                //else
-                //{
-                //    Videos = videos.AllVideos();
-                //}
+                Groups = videos.AllGroups();
             }
         }
     }
 
-    private void OnAddButtonClicked()
+    private async Task OnAddButtonClicked()
     {
-        //if (VideoGroupsToChange.Count > 0)
-        //{
-        //    VideoGroupsToChange.ForEach(x =>
-        //    {
-        //        videos.UpdateVideoGroup(x.Item1, x.Item2);
-        //    });
-
-        //    VideoGroupsToChange = new List<Tuple<string, string>>();
-        //    ApplyButtonDisabled = true;
-        //}
+        videos.AddGroup(SearchTerm);
+        Groups = videos.AllGroups();
+        SearchTerm = String.Empty;
+        //await SearchTermChanged.InvokeAsync(String.Empty);
+        await OnSearchTermChanged(new ChangeEventArgs() { Value = String.Empty });
     }
 
     private void OnSearchButtonClicked()

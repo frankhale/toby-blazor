@@ -12,6 +12,7 @@ namespace TobyBlazor.Data
         public List<Video> VideosByPage(int page, int pageSize);
         public void AddGroup(string name);
         public List<Group> AllGroups();
+        public Group FindGroupByName(string name);
         public List<Group> FindGroup(string like);
         public List<Video> FindVideo(string like);
         public List<Video> FindVideoByGroup(string group);
@@ -19,6 +20,8 @@ namespace TobyBlazor.Data
         public Video FindVideoByYTId(string ytid, string group);
         public void AddVideo(Video v, string group);
         public void AddVideoToRecentlyPlayed(Video video);
+        public void DeleteGroup(string name);
+        public void DeleteGroupRange(List<Group> groups);
         public void DeleteVideo(string ytid, string group);
         public void DeleteVideoRange(List<Video> videos);
         public void DeleteVideoRangeByGroup(string group);
