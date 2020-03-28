@@ -43,6 +43,7 @@ Search commands:
 - `/group [name]` or `/g [name]`: lists videos in a specific group
 - `/favorites` or `/fav`: list favorite videos
 - `/manage` or `/mg`: video management
+- `/manage-groups` or `/mgg`: group management
 - `/recently-played` or `/rp`: list all recently played videos
 - `[search term]`: search locally for video
 - `/youtube [search term]` or `/yt [search term]`: search YouTube for videos
@@ -54,11 +55,13 @@ The Recently Played videos are limited to 30 videos.
 
 ## Screenshots
 
-![Basic UI](screenshots/one.PNG)
+![Basic UI](screenshots/one.png)
 
-![Video Playback](screenshots/two.PNG)
+![Video Playback](screenshots/two.png)
 
-![Video Management](screenshots/three.PNG)
+![Video Management](screenshots/three.png)
+
+![Group Management](screenshots/four.png)
 
 ## Folder Layout
 
@@ -71,7 +74,7 @@ Frank Hale &lt;frankhale@gmail.com&gt;
 
 ## Date
 
-27 March 2019
+28 March 2019
 
 ## License
 
