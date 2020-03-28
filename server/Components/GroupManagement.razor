@@ -1,0 +1,159 @@
+﻿@using TobyBlazor.Data
+@using TobyBlazor.Models
+@using System.Net
+
+<div style="margin-top:25px;">
+    <nav class="navbar navbar-light bg-light">
+        <div class="navbar-brand">
+            <button type="button" class="btn btn-danger" disabled=@DeleteButtonDisabled @onclick=@OnDeleteButtonClicked>Delete</button>
+        </div>
+        <div class="form-inline">
+            <form @onsubmit=@OnSearchButtonClicked>
+                <div class="input-group">
+                    <input type="text"
+                           class="form-control"
+                           placeholder="Type group name here..."
+                           aria-label="Add group or search for group"
+                           aria-describedby="button-addon4"
+                           @oninput="eventArgs => OnTextEntered(eventArgs.Value.ToString())">
+                    <div class="input-group-append" id="button-addon4">
+                        <button class="btn btn-info" type="button" @onclick=@OnAddButtonClicked disabled=@AddButtonDisabled>Add</button>
+                        <button class="btn btn-success" type="button" @onclick=@OnSearchButtonClicked disabled=@SearchButtonDisabled>Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </nav>
+
+    <div class="list-group">
+        @foreach (var group in Groups)
+        {
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div style="margin-left: 10px; margin-right:10px; margin-bottom: 30px;">
+                    <input type="checkbox" class="form-check-input" @onchange="eventArgs => OnCheckboxClicked(group.Name, eventArgs.Value)" />
+                </div>
+                <div class="w-100"><h5>@group.Name</h5></div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private readonly IVideoRepository videos = new VideoRepository();
+
+    private string SearchTerm { get; set; } = String.Empty;
+    private string NewGroupName { get; set; } = String.Empty;
+    private bool DeleteButtonDisabled { get; set; } = true;
+    private bool AddButtonDisabled { get; set; } = true;
+    private bool SearchButtonDisabled { get; set; } = true;
+
+    private List<Group> Groups { get; set; } = new List<Group>();
+    private List<string> GroupsToDelete = new List<string>();
+
+    protected override void OnInitialized()
+    {
+        Groups = videos.AllGroups();
+    }
+
+    private void Search(string searchTerm)
+    {
+        if (!String.IsNullOrEmpty(searchTerm))
+        {
+            Groups = searchTerm switch
+            {
+                _ when searchTerm.ToLower().StartsWith("/all") => videos.AllGroups(),
+                _ => videos.FindGroup(searchTerm)
+            };
+        }
+    }
+
+    private void OnTextEntered(string value)
+    {
+        SearchTerm = value;
+
+        if (!string.IsNullOrEmpty(value))
+        {
+            AddButtonDisabled = false;
+            SearchButtonDisabled = false;
+        }
+        else
+        {
+            AddButtonDisabled = true;
+            SearchButtonDisabled = true;
+
+            Groups = videos.AllGroups();
+        }
+    }
+
+    private void OnCheckboxClicked(string name, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            if (!GroupsToDelete.Contains(name))
+            {
+                GroupsToDelete.Add(name);
+            }
+        }
+        else
+        {
+            if (GroupsToDelete.Contains(name))
+            {
+                GroupsToDelete.Remove(name);
+            }
+        }
+
+        DeleteButtonDisabled = (GroupsToDelete.Count > 0) ? false : true;
+    }
+
+    private void OnDeleteButtonClicked()
+    {
+        if (GroupsToDelete.Count > 0)
+        {
+            var deleteGroups = new List<Group>();
+
+            GroupsToDelete.ForEach(x =>
+            {
+                //var foundVideo = videos.FindVideoByYTId(x);
+                //if (foundVideo != null)
+                //{
+                //    deleteVideos.Add(foundVideo);
+                //}
+            });
+
+            if (deleteGroups.Count > 0)
+            {
+                //videos.DeleteVideoRange(deleteVideos);
+                //VideosToDelete = new List<string>();
+                //DeleteButtonDisabled = true;
+
+                //if (!String.IsNullOrEmpty(SearchTerm))
+                //{
+                //    Search(SearchTerm);
+                //}
+                //else
+                //{
+                //    Videos = videos.AllVideos();
+                //}
+            }
+        }
+    }
+
+    private void OnAddButtonClicked()
+    {
+        //if (VideoGroupsToChange.Count > 0)
+        //{
+        //    VideoGroupsToChange.ForEach(x =>
+        //    {
+        //        videos.UpdateVideoGroup(x.Item1, x.Item2);
+        //    });
+
+        //    VideoGroupsToChange = new List<Tuple<string, string>>();
+        //    ApplyButtonDisabled = true;
+        //}
+    }
+
+    private void OnSearchButtonClicked()
+    {
+        Search(SearchTerm);
+    }
+}

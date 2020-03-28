@@ -13,6 +13,10 @@
     {
         <VideoManagement />
     }
+    else if (Result.Type == SearchResultType.ManageGroups) 
+    { 
+        <GroupManagement />
+    }
     else if (Result.Type == SearchResultType.Search)
     {
         <VideoPagination Videos=@Result.Videos>

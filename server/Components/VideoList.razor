@@ -45,7 +45,7 @@
     private async Task VideoSelected(Video video)
     {
         SelectedVideo = video;
-        videos.AddToRecentlyPlayed(video);
+        videos.AddVideoToRecentlyPlayed(video);
         await OnSelectedVideo.InvokeAsync(video);
     }
 

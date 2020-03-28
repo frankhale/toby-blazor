@@ -64,7 +64,7 @@
 
     public bool IsAddedToFavorites(Video video)
     {
-        var found = videos.FindByYTId(video.YTId, "Favorites");
+        var found = videos.FindVideoByYTId(video.YTId, "Favorites");
 
         if (found == null || found.Group != "Favorites")
         {
@@ -90,12 +90,12 @@
         if (!AddedToFavorites)
         {
             AddedToFavorites = true;
-            videos.Add(SelectedVideo, "Favorites");
+            videos.AddVideo(SelectedVideo, "Favorites");
         }
         else
         {
             AddedToFavorites = false;
-            videos.Delete(SelectedVideo.YTId, "Favorites");
+            videos.DeleteVideo(SelectedVideo.YTId, "Favorites");
         }
     }
 }

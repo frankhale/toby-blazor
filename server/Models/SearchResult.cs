@@ -6,6 +6,7 @@ namespace TobyBlazor.Models
     {
         Command,
         Manage,
+        ManageGroups,
         Search
     }
 

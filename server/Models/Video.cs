@@ -2,7 +2,7 @@
 
 namespace TobyBlazor.Models
 {
-    public class Video
+    public class Video : IDataItem
     {
         public int Id { get; set; }
         public string Title { get; set; }

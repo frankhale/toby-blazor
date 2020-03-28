@@ -10,8 +10,12 @@
         </div>
         <div class="form-inline">
             <form @onsubmit=@OnSearchButtonClicked>
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" @bind=@SearchTerm>
-                <button class="btn btn-success my-2 my-sm-0" type="submit" @onclick=@OnSearchButtonClicked>Search</button>
+                <div class="input-group">
+                    <input type="text" class="form-control" @bind=@SearchTerm placeholder="Search for video..." aria-label="Search for video" aria-describedby="button-addon4"> 
+                    <div class="input-group-append" id="button-addon4">                        
+                        <button class="btn btn btn-success" type="button" @onclick=@OnSearchButtonClicked>Search</button>
+                    </div>
+                </div>
             </form>
         </div>
     </nav>
@@ -74,7 +78,7 @@
             Videos = searchTerm switch
             {
                 _ when searchTerm.ToLower().StartsWith("/all") => videos.AllVideos(),
-                _ => videos.Find(searchTerm)
+                _ => videos.FindVideo(searchTerm)
             };
         }
     }
@@ -127,7 +131,7 @@
 
             VideosToDelete.ForEach(x =>
             {
-                var foundVideo = videos.FindByYTId(x);
+                var foundVideo = videos.FindVideoByYTId(x);
                 if (foundVideo != null)
                 {
                     deleteVideos.Add(foundVideo);
@@ -136,7 +140,7 @@
 
             if (deleteVideos.Count > 0)
             {
-                videos.DeleteRange(deleteVideos);
+                videos.DeleteVideoRange(deleteVideos);
                 VideosToDelete = new List<string>();
                 DeleteButtonDisabled = true;
 
@@ -158,7 +162,7 @@
         {
             VideoGroupsToChange.ForEach(x =>
             {
-                videos.UpdateGroup(x.Item1, x.Item2);
+                videos.UpdateVideoGroup(x.Item1, x.Item2);
             });
 
             VideoGroupsToChange = new List<Tuple<string, string>>();

@@ -13,7 +13,7 @@ namespace TobyBlazor.Data
     {
         private readonly DataContext db = new DataContext();
 
-        public void Add(Video v, string group)
+        public void AddVideo(Video v, string group)
         {
             if (String.IsNullOrEmpty(group))
             {
@@ -30,7 +30,7 @@ namespace TobyBlazor.Data
             db.SaveChanges();
         }
 
-        public void AddToRecentlyPlayed(Video video)
+        public void AddVideoToRecentlyPlayed(Video video)
         {
             if (db.Videos.Where(x => x.YTId == video.YTId && x.Group == "Recently Played")
                          .FirstOrDefault() != null) return;
@@ -60,7 +60,7 @@ namespace TobyBlazor.Data
             db.SaveChanges();
         }
 
-        public void Delete(string ytid, string group)
+        public void DeleteVideo(string ytid, string group)
         {
             if (String.IsNullOrEmpty(ytid)) return;
 
@@ -70,13 +70,13 @@ namespace TobyBlazor.Data
             db.SaveChanges();
         }
 
-        public void DeleteRange(List<Video> videos)
+        public void DeleteVideoRange(List<Video> videos)
         {
             db.Videos.RemoveRange(videos);
             db.SaveChanges();
         }
 
-        public void DeleteRangeByGroup(string group)
+        public void DeleteVideoRangeByGroup(string group)
         {
             var videos = db.Videos.Where(x => x.Group == group)
                                   .ToList();
@@ -88,27 +88,34 @@ namespace TobyBlazor.Data
             }
         }
 
-        public List<Video> Find(string like)
+        public List<Group> FindGroup(string like)
+        {
+            return db.Groups.Where(x => x.Name.ToLower().Contains(like.ToLower()))
+                            .OrderBy(x => x.Name)
+                            .ToList();                        
+        }
+
+        public List<Video> FindVideo(string like)
         {
             return db.Videos.Where(x => x.Title.ToLower().Contains(like.ToLower()) && x.Group != "Recently Played")
                             .OrderBy(x => x.Title)
                             .ToList();
         }
 
-        public List<Video> FindByGroup(string group)
+        public List<Video> FindVideoByGroup(string group)
         {
             return db.Videos.Where(x => x.Group.ToLower() == group.ToLower())
                             .OrderBy(x => x.Title)
                             .ToList();
         }
 
-        public Video FindByYTId(string ytid)
+        public Video FindVideoByYTId(string ytid)
         {
             return db.Videos.Where(x => x.YTId == ytid && x.Group != "Recently Played")
                             .FirstOrDefault();
         }
 
-        public Video FindByYTId(string ytid, string group)
+        public Video FindVideoByYTId(string ytid, string group)
         {
             return db.Videos.Where(x => x.YTId == ytid && x.Group == group)
                             .FirstOrDefault();
@@ -130,13 +137,26 @@ namespace TobyBlazor.Data
                 .ToList();
         }
 
+        public void AddGroup(string name)
+        {
+            var groupExists = db.Groups.Where(x => x.Name == name).FirstOrDefault();
+
+            if (groupExists == null)
+            {
+                db.Groups.Add(new Group()
+                {
+                    Name = name
+                });
+            }
+        }
+
         public List<Group> AllGroups()
         {
             return db.Groups.OrderBy(x => x.Name)
                             .ToList();
         }
 
-        public void UpdateGroup(string ytid, string group)
+        public void UpdateVideoGroup(string ytid, string group)
         {
             var foundVideo = db.Videos.Where(x => x.YTId == ytid && x.Group != "Recently Played").FirstOrDefault();
 
@@ -196,11 +216,11 @@ namespace TobyBlazor.Data
             return value switch
             {
                 _ when MatchesCommandList(value[0], "/ls", "/all") => AllVideos(),
-                _ when MatchesCommandList(value[0], "/fav", "/favorites") => FindByGroup("Favorites"),
-                _ when MatchesCommandList(value[0], "/rp", "/recently-played") => FindByGroup("Recently Played"),
-                _ when MatchesCommandList(value[0], "/g", "/group") && HasSubValue(value) => FindByGroup(value[1]),
+                _ when MatchesCommandList(value[0], "/fav", "/favorites") => FindVideoByGroup("Favorites"),
+                _ when MatchesCommandList(value[0], "/rp", "/recently-played") => FindVideoByGroup("Recently Played"),
+                _ when MatchesCommandList(value[0], "/g", "/group") && HasSubValue(value) => FindVideoByGroup(value[1]),
                 _ when MatchesCommandList(value[0], "/yt", "/youtube") && HasSubValue(value) => await SearchYouTube(value[1]),
-                _ => Find(term)
+                _ => FindVideo(term)
             };
         }
     }

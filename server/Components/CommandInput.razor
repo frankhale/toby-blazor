@@ -23,17 +23,19 @@
     [Parameter]
     public EventCallback<SearchResult> OnSearch { get; set; }
 
+    public class ThrowAwayDataItem : IDataItem { }
+
     private SearchResult CreateResult(SearchResultType type, Func<Message> action)
     {
-        return CreateResult(type, null, null, action);
+        return CreateResult<ThrowAwayDataItem>(type, null, null, action);
     }
 
-    private SearchResult CreateResult(SearchResultType type, List<Video> videos)
+    private SearchResult CreateResult<T>(SearchResultType type, List<T> data) where T: IDataItem
     {
-        return CreateResult(type, null, videos, null);
+        return CreateResult(type, null, data, null);
     }
 
-    private SearchResult CreateResult(SearchResultType type, Message message, List<Video> videos, Func<Message> action) {
+    private SearchResult CreateResult<T>(SearchResultType type, Message message, List<T> data, Func<Message> action) where T: IDataItem {
         var result = new SearchResult();
 
         if(action != null) {
@@ -42,8 +44,11 @@
             result.Message = message;
         }
 
-        result.Type = type;
-        result.Videos = videos;
+        if (data != null)
+        {
+            result.Type = type;
+            result.Videos = data as List<Video>;
+        }
 
         return result;
     }
@@ -65,10 +70,11 @@
                 //    }),
                 _ when MatchesCommandList(searchValue[0], "/clear") => CreateResult(SearchResultType.Search, new List<Video>()),
                 _ when MatchesCommandList(searchValue[0], "/mg", "/manage") => CreateResult(SearchResultType.Manage, videos.AllVideos()),
+                _ when MatchesCommandList(searchValue[0], "/mgg", "/manage-groups") => CreateResult(SearchResultType.ManageGroups, videos.AllGroups()),
                 _ when MatchesCommandList(searchValue[0], "/crp", "/clear-recently-played") =>
                     CreateResult(SearchResultType.Command,
                         () => {
-                            videos.DeleteRangeByGroup("Recently Played");
+                            videos.DeleteVideoRangeByGroup("Recently Played");
                             return new Message() { Value = "Deleted all the videos in the Recently Played group", Type = "alert-danger" };
                         }
                     ),
