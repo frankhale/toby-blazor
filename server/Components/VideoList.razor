@@ -6,7 +6,7 @@
     <div class="list-group">
         @foreach (var video in Videos)
         {
-            <button type="button" @onclick="@(() => VideoSelected(video))" class="list-group-item list-group-item-action d-flex justify-content-lg-start align-items-center @(SelectedVideo != null && video.YTId == SelectedVideo.YTId ? "active" : "")">
+            <button @key=video.YTId type="button" @onclick="@(() => VideoSelected(video))" class="list-group-item list-group-item-action d-flex justify-content-lg-start align-items-center @(SelectedVideo != null && video.YTId == SelectedVideo.YTId ? "active" : "")">
                 <img class="mr-3" src="@GetVideoThumbnail(video.YTId)" />
                 <h5 class="mt-0" style="text-align:left;">@WebUtility.HtmlDecode(video.Title)</h5>
             </button>

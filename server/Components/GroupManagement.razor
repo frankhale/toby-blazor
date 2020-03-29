@@ -1,6 +1,5 @@
 ﻿@using TobyBlazor.Data
 @using TobyBlazor.Models
-@using System.Net
 
 <div style="margin-top:25px;">
     <nav class="navbar navbar-light bg-light">
@@ -29,9 +28,9 @@
     <div class="list-group">
         @foreach (var group in Groups)
         {
-            <div class="list-group-item d-flex justify-content-between align-items-center">
+            <div @key=@group.Name class="list-group-item d-flex justify-content-between align-items-center">
                 <div style="margin-left: 10px; margin-right:10px; margin-bottom: 30px;">
-                    <input type="checkbox" @key=@group.Name class="form-check-input" @onchange="eventArgs => OnCheckboxClicked(group.Name, eventArgs.Value)" />
+                    <input type="checkbox" class="form-check-input" @onchange="eventArgs => OnCheckboxClicked(group.Name, eventArgs.Value)" />
                 </div>
                 <div class="w-100"><h5>@group.Name</h5></div>
             </div>

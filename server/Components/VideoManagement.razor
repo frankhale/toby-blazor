@@ -29,7 +29,7 @@
     <div class="list-group">
         @foreach (var video in Videos)
         {
-            <div class="list-group-item d-flex justify-content-between align-items-center">
+            <div @key=video.YTId class="list-group-item d-flex justify-content-between align-items-center">
                 <div style="margin-left: 10px; margin-right:10px; margin-bottom: 30px;">
                     <input type="checkbox" class="form-check-input" @onchange="eventArgs => { OnCheckboxClicked(video.YTId, eventArgs.Value); }" />
                 </div>
