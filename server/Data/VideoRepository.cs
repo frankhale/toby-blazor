@@ -232,7 +232,7 @@ namespace TobyBlazor.Data
             if (String.IsNullOrEmpty(term.Trim())) return new List<Video>();
 
             static bool HasSubValue(string[] value) => value.Length > 1 && !String.IsNullOrEmpty(value[1]);
-            static bool MatchesCommandList(string value, params string[] commands) => (commands.Where(x => x == value).FirstOrDefault() != null) ? true : false;
+            static bool MatchesCommandList(string value, params string[] commands) => (commands.FirstOrDefault(x => x == value) != null);
 
             var value = term.ToLower().Split(new char[] { ' ' }, 2);
 
