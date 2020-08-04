@@ -66,7 +66,7 @@ The Recently Played videos are limited to 30 videos.
 ## Folder Layout
 
 - server: Blazor server-side project
-- client: Electron and NW.js drivers (soon [Web Window support](https://blog.stevensanderson.com/2019/11/18/2019-11-18-webwindow-a-cross-platform-webview-for-dotnet-core/))
+- client: Electron and NW.js drivers
 
 ## Author(s)
 
@@ -74,7 +74,7 @@ Frank Hale &lt;frankhale@gmail.com&gt;
 
 ## Date
 
-28 March 2019
+4 August 2020
 
 ## License
 

@@ -18,11 +18,11 @@
     }
     else
     {
-        <ul class="list-group list-group-horizontal" style="flex-wrap: wrap;">
+        <ul class="list-group list-group-horizontal-sm" style="flex-wrap: wrap;">
             @foreach (var video in Videos)
             {
-                <li class="list-group-item flex-fill @(SelectedVideo != null && video.YTId == SelectedVideo.YTId ? "active" : "")" @key=video.YTId @onclick="@(() => VideoSelected(video))">
-                    <img src="@HelperExtensions.GetDefaultVideoThumbnail(video.YTId)" />
+                <li class="list-group-item flex-fill text-center @(SelectedVideo != null && video.YTId == SelectedVideo.YTId ? "active" : "")" @key=video.YTId @onclick="@(() => VideoSelected(video))">
+                    <img src="@HelperExtensions.GetDefaultVideoThumbnail(video.YTId)" style="width:96px;height:auto;" />
                 </li>
             }
         </ul>
