@@ -8,13 +8,17 @@
 
 <div id="main-ui">
     <CommandInput OnSearch=@OnSearchResults />
+    
+    <div style="padding-bottom: 15px;">
+        <VideoList RecentlyPlayed="true" OnSelectedVideo=@OnSelectedVideo />
+    </div>
 
     @if (Result.Type == SearchResultType.Manage)
     {
         <VideoManagement />
     }
-    else if (Result.Type == SearchResultType.ManageGroups) 
-    { 
+    else if (Result.Type == SearchResultType.ManageGroups)
+    {
         <GroupManagement />
     }
     else if (Result.Type == SearchResultType.Search)

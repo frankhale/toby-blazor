@@ -8,6 +8,6 @@ namespace TobyBlazor.Models
         public string Title { get; set; }
         public string YTId { get; set; }
         public string Group { get; set; }
-        public DateTime? CreateDate { get; set; }
+        public DateTime CreateDate { get; set; }
     }
 }

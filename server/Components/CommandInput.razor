@@ -9,7 +9,7 @@
             <Icon Path="css/bootstrap/icons/search.svg" Title="Search" Invert=true />
         </span>
     </div>
-    <input class="form-control mw-100 w-100" type="search" placeholder="Search" aria-label="Search"
+    <input class="form-control" type="search" placeholder="Search" aria-label="Search"
            spellcheck="false"
            @bind=@SearchTerm
            @onkeyup=@(eventArgs => OnKeyPress(eventArgs.Key)) />
@@ -80,7 +80,7 @@
                             return new Message() { Value = "Deleted all the videos in the Recently Played group", Type = "alert-danger" };
                         }
                     ),
-                _ => CreateResult(SearchResultType.Search, await videos.Search(SearchTerm))
+                _ => CreateResult(SearchResultType.Search, await videos.SearchAsync(SearchTerm))
             };
 
             await OnSearch.InvokeAsync(result);

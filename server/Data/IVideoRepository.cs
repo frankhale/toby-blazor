@@ -6,8 +6,8 @@ namespace TobyBlazor.Data
 {
     public interface IVideoRepository
     {
-        public Task<List<Video>> Search(string term);
-        public Task<List<Video>> SearchYouTube(string term);
+        public Task<List<Video>> SearchAsync(string term);
+        public Task<List<Video>> SearchYouTubeAsync(string term);
         public List<Video> AllVideos();
         public List<Video> VideosByPage(int page, int pageSize);
         public void AddGroup(string name);
@@ -26,5 +26,6 @@ namespace TobyBlazor.Data
         public void DeleteVideoRange(List<Video> videos);
         public void DeleteVideoRangeByGroup(string group);
         public void UpdateVideoGroup(string ytid, string group);
+        public List<Video> GetRecentlyPlayedVideos(int count);
     }
 }

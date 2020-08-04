@@ -3,6 +3,7 @@ using Google.Apis.YouTube.v3;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Security;
 using System.Threading.Tasks;
 using TobyBlazor.Models;
@@ -98,7 +99,7 @@ namespace TobyBlazor.Data
         {
             return db.Groups.Where(x => x.Name.ToLower().Contains(like.ToLower()))
                             .OrderBy(x => x.Name)
-                            .ToList();                        
+                            .ToList();
         }
 
         public List<Video> FindVideo(string like)
@@ -193,7 +194,7 @@ namespace TobyBlazor.Data
             }
         }
 
-        public async Task<List<Video>> SearchYouTube(string term)
+        public async Task<List<Video>> SearchYouTubeAsync(string term)
         {
             var youtubeService = new YouTubeService(new BaseClientService.Initializer()
             {
@@ -227,7 +228,7 @@ namespace TobyBlazor.Data
             return videos;
         }
 
-        public async Task<List<Video>> Search(string term)
+        public async Task<List<Video>> SearchAsync(string term)
         {
             if (String.IsNullOrEmpty(term.Trim())) return new List<Video>();
 
@@ -242,9 +243,19 @@ namespace TobyBlazor.Data
                 _ when MatchesCommandList(value[0], "/fav", "/favorites") => FindVideoByGroup("Favorites"),
                 _ when MatchesCommandList(value[0], "/rp", "/recently-played") => FindVideoByGroup("Recently Played"),
                 _ when MatchesCommandList(value[0], "/g", "/group") && HasSubValue(value) => FindVideoByGroup(value[1]),
-                _ when MatchesCommandList(value[0], "/yt", "/youtube") && HasSubValue(value) => await SearchYouTube(value[1]),
+                _ when MatchesCommandList(value[0], "/yt", "/youtube") && HasSubValue(value) => await SearchYouTubeAsync(value[1]),
                 _ => FindVideo(term)
             };
+        }
+
+        public List<Video> GetRecentlyPlayedVideos(int count)
+        {
+            return db.Videos
+                .Where(x => x.Group.ToLower() == "recently played")
+                .OrderByDescending(x => x.CreateDate)
+                .ThenBy(x => x.Title)
+                .Take(count)
+                .ToList();
         }
     }
 }

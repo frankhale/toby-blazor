@@ -1,17 +1,32 @@
 ﻿@using System.Net
 @using TobyBlazor.Models
 @using TobyBlazor.Data
+@using TobyBlazor.Other
 
-<div style="margin-top:25px;">
-    <div class="list-group">
-        @foreach (var video in Videos)
-        {
-            <button @key=video.YTId type="button" @onclick="@(() => VideoSelected(video))" class="list-group-item list-group-item-action d-flex justify-content-lg-start align-items-center @(SelectedVideo != null && video.YTId == SelectedVideo.YTId ? "active" : "")">
-                <img class="mr-3" src="@GetVideoThumbnail(video.YTId)" />
-                <h5 class="mt-0" style="text-align:left;">@WebUtility.HtmlDecode(video.Title)</h5>
-            </button>
-        }
-    </div>
+<div style="margin-top: 25px;">
+    @if (!RecentlyPlayed)
+    {
+        <ul class="list-group">
+            @foreach (var video in Videos)
+            {
+                <li @key=video.YTId @onclick="@(() => VideoSelected(video))" class="list-group-item list-group-item-action d-flex justify-content-lg-start align-items-center @(SelectedVideo != null && video.YTId == SelectedVideo.YTId ? "active" : "")">
+                    <img class="mr-3" src="@HelperExtensions.GetDefaultVideoThumbnail(video.YTId)" />
+                    <h5 class="mt-0" style="text-align:left;">@WebUtility.HtmlDecode(video.Title)</h5>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <ul class="list-group list-group-horizontal" style="flex-wrap: wrap;">
+            @foreach (var video in Videos)
+            {
+                <li class="list-group-item flex-fill @(SelectedVideo != null && video.YTId == SelectedVideo.YTId ? "active" : "")" @key=video.YTId @onclick="@(() => VideoSelected(video))">
+                    <img src="@HelperExtensions.GetDefaultVideoThumbnail(video.YTId)" />
+                </li>
+            }
+        </ul>
+    }
 </div>
 
 @code {
@@ -19,27 +34,28 @@
     public List<Video> Videos { get; set; }
 
     [Parameter]
-    public EventCallback<Video> OnSelectedVideo { get; set; }
+    public bool RecentlyPlayed { get; set; } = false;
 
     [Parameter]
-    public bool ClearSelection { get; set; } = true;
+    public EventCallback<Video> OnSelectedVideo { get; set; }
 
     private readonly IVideoRepository videos = new VideoRepository();
     private Video SelectedVideo { get; set; }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override void OnInitialized()
     {
-        // This is not a very good solution to clear the currently selected
-        // video but we'll use it for now until something better comes along.
-        if (ClearSelection)
+        if (RecentlyPlayed)
         {
-            await Task.Run(() => { SelectedVideo = null; });
+            Videos = videos.GetRecentlyPlayedVideos(10);
         }
     }
 
-    private string GetVideoThumbnail(string ytid)
+    protected override void OnAfterRender(bool firstRender)
     {
-        return String.Format("https://i.ytimg.com/vi/{0}/default.jpg", ytid);
+        if (SelectedVideo != null)
+        {
+            SelectedVideo = null;
+        }
     }
 
     private async Task VideoSelected(Video video)
@@ -47,10 +63,5 @@
         SelectedVideo = video;
         videos.AddVideoToRecentlyPlayed(video);
         await OnSelectedVideo.InvokeAsync(video);
-    }
-
-    public void OnVideoDismissed()
-    {
-        SelectedVideo = null;
     }
 }
