@@ -1,4 +1,6 @@
-﻿<div style="margin-top:25px;">
+﻿@using System.Net 
+
+<div style="margin-top:25px;">
     <nav class="navbar navbar-light bg-light">
         <div class="navbar-brand">
             <button type="button" class="btn btn-warning" disabled=@ApplyButtonDisabled @onclick=@OnApplyButtonClicked>Apply</button>
@@ -28,7 +30,7 @@
                 <div style="margin-left: 10px; margin-right:10px; margin-bottom: 30px;">
                     <input type="checkbox" class="form-check-input" @onchange="eventArgs => { OnCheckboxClicked(video.YTId, eventArgs.Value); }" />
                 </div>
-                <div><img class="mr-3" src="@GetVideoThumbnail(video.YTId)" /></div>
+                <div><img class="mr-3" src="@GetVideoThumbnail(video.YTId)" title=@WebUtility.HtmlDecode(@video.Title) /></div>
                 <div class="w-100"><h5>@video.Title</h5></div>
                 <div>
                     <div class="btn-group">

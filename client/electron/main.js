@@ -4,8 +4,8 @@ let win;
 
 function createWindow() {
   win = new BrowserWindow({
-    width: 1280,
-    height: 720,
+    width: 1024,
+    height: 768,
     icon: __dirname + "/toby.png"
   });
   win.removeMenu();

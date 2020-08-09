@@ -55,7 +55,7 @@ The Recently Played videos are limited to 30 videos.
 
 ## Screenshots
 
-![Basic UI](screenshots/one.png)
+![Basic UI](screenshots/five.png)
 
 ![Video Playback](screenshots/two.png)
 
@@ -74,7 +74,7 @@ Frank Hale &lt;frankhale@gmail.com&gt;
 
 ## Date
 
-4 August 2020
+9 August 2020
 
 ## License
 
