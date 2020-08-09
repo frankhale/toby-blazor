@@ -1,5 +1,4 @@
-﻿@using TobyBlazor.Models
-@using TobyBlazor.Other
+﻿@using TobyBlazor.Other
 
 <div style="margin-top:25px;">
     <div class="list-group list-group-horizontal">
@@ -13,27 +12,3 @@
         }
     </div>
 </div>
-
-@code {
-    [Parameter]
-    public List<Video> Videos { get; set; }
-
-    private Video SelectedVideo { get; set; }
-
-    [Parameter]
-    public EventCallback<Video> OnSelectedVideo { get; set; }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (SelectedVideo != null)
-        {
-            await Task.Run(() => { SelectedVideo = null; });
-        }
-    }
-
-    private async Task VideoSelected(Video video)
-    {
-        SelectedVideo = video;
-        await OnSelectedVideo.InvokeAsync(video);
-    }
-}

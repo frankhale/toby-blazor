@@ -130,9 +130,9 @@ namespace TobyBlazor.Data
 
         public List<Video> AllVideos()
         {
-            return db.Videos.Where(x => x.Group.ToLower() != "recently played")
-                            .OrderBy(x => x.Title)
-                            .ToList();
+            return db.Videos
+                     .Where(x => x.Group.ToLower() != "recently played")
+                     .OrderBy(x => x.Title).ToList();
         }
 
         public List<Video> VideosByPage(int page, int pageSize)

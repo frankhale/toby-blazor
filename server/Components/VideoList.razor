@@ -1,6 +1,4 @@
 ﻿@using System.Net
-@using TobyBlazor.Models
-@using TobyBlazor.Data
 @using TobyBlazor.Other
 
 <div style="margin-top: 25px;">
@@ -28,40 +26,3 @@
         </ul>
     }
 </div>
-
-@code {
-    [Parameter]
-    public List<Video> Videos { get; set; }
-
-    [Parameter]
-    public bool RecentlyPlayed { get; set; } = false;
-
-    [Parameter]
-    public EventCallback<Video> OnSelectedVideo { get; set; }
-
-    private readonly IVideoRepository videos = new VideoRepository();
-    private Video SelectedVideo { get; set; }
-
-    protected override void OnInitialized()
-    {
-        if (RecentlyPlayed)
-        {
-            Videos = videos.GetRecentlyPlayedVideos(10);
-        }
-    }
-
-    protected override void OnAfterRender(bool firstRender)
-    {
-        if (SelectedVideo != null)
-        {
-            SelectedVideo = null;
-        }
-    }
-
-    private async Task VideoSelected(Video video)
-    {
-        SelectedVideo = video;
-        videos.AddVideoToRecentlyPlayed(video);
-        await OnSelectedVideo.InvokeAsync(video);
-    }
-}
