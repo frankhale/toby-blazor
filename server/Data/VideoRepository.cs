@@ -3,8 +3,7 @@ using Google.Apis.YouTube.v3;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using System.Security;
+using System.Net;
 using System.Threading.Tasks;
 using TobyBlazor.Models;
 
@@ -23,7 +22,7 @@ namespace TobyBlazor.Data
 
             db.Videos.Add(new Video()
             {
-                Title = SecurityElement.Escape(v.Title),
+                Title = v.Title, // WebUtility.HtmlEncode(v.Title),
                 YTId = v.YTId,
                 Group = group,
                 CreateDate = DateTime.Now
@@ -53,7 +52,7 @@ namespace TobyBlazor.Data
 
             db.Videos.Add(new Video()
             {
-                Title = SecurityElement.Escape(video.Title),
+                Title = video.Title, // WebUtility.HtmlEncode(video.Title),
                 YTId = video.YTId,
                 Group = "Recently Played",
                 CreateDate = DateTime.Now

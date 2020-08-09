@@ -10,8 +10,7 @@
                            class="form-control"
                            placeholder="Type group name here..."
                            aria-label="Add group or search for group"
-                           aria-describedby="button-addon4"
-                           @bind-value=@SearchTerm                           
+                           aria-describedby="button-addon4"                                                   
                            @oninput=@OnSearchTermChanged>
                     <div class="input-group-append" id="button-addon4">
                         <button class="btn btn-info" type="button" @onclick=@OnAddButtonClicked disabled=@AddButtonDisabled>Add</button>
