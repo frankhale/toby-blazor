@@ -181,3 +181,8 @@ app {
         display: block;
     }
 }
+
+.modal-open .modal {
+    padding: 0px !important;
+    padding-right: 22px !important;
+}
