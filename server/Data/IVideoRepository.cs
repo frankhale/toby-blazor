@@ -6,26 +6,37 @@ namespace TobyBlazor.Data
 {
     public interface IVideoRepository
     {
+        #region Search & Find
         public Task<List<Video>> SearchAsync(string term);
         public Task<List<Video>> SearchYouTubeAsync(string term);
-        public List<Video> AllVideos();
-        public List<Video> VideosByPage(int page, int pageSize);
-        public void AddGroup(string name);
-        public List<Group> AllGroups();
-        public Group FindGroupByName(string name);
-        public List<Group> FindGroup(string like);
-        public List<Video> FindVideo(string like);
-        public List<Video> FindVideoByGroup(string group);
-        public Video FindVideoByYTId(string ytid);
-        public Video FindVideoByYTId(string ytid, string group);
-        public void AddVideo(Video v, string group);
-        public void AddVideoToRecentlyPlayed(Video video);
-        public void DeleteGroup(string name);
-        public void DeleteGroupRange(List<Group> groups);
-        public void DeleteVideo(string ytid, string group);
-        public void DeleteVideoRange(List<Video> videos);
-        public void DeleteVideoRangeByGroup(string group);
-        public void UpdateVideoGroup(string ytid, string group);
-        public List<Video> GetRecentlyPlayedVideos(int count);
+        public Task<Group> FindGroupByNameAsync(string name);
+        public Task<List<Group>> FindGroupAsync(string like);
+        public Task<List<Video>> FindVideoAsync(string like);
+        public Task<List<Video>> FindVideoByGroupAsync(string group);
+        public Task<Video> FindVideoByYTIdAsync(string ytid);
+        public Task<Video> FindVideoByYTIdAsync(string ytid, string group);
+        #endregion
+
+        #region Get All Videos/Groups/Recently Played
+        public Task<List<Video>> AllVideosAsync();
+        public Task<List<Video>> VideosByPageAsync(int page, int pageSize);
+        public Task<List<Group>> AllGroupsAsync();
+        public Task<List<Video>> GetRecentlyPlayedVideosAsync(int count);
+        #endregion
+
+        #region Add/Update - Videos/Groups
+        public Task AddGroupAsync(string name);                      
+        public Task AddVideoAsync(Video v, string group);
+        public Task AddVideoToRecentlyPlayedAsync(Video video);
+        public Task UpdateVideoGroupAsync(string ytid, string group);        
+        #endregion
+
+        #region Delete Videos/Groups
+        public Task DeleteGroupAsync(string name);
+        public Task DeleteGroupRangeAsync(List<Group> groups);
+        public Task DeleteVideoAsync(string ytid, string group);
+        public Task DeleteVideoRangeAsync(List<Video> videos);
+        public Task DeleteVideoRangeByGroupAsync(string group);
+        #endregion
     }
 }

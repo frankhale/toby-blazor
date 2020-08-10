@@ -38,7 +38,7 @@
                             @video.Group
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                            @foreach (var group in videos.AllGroups())
+                            @foreach (var group in Task.Run(async () => await videos.AllGroupsAsync()).Result)
                             {
                                 @if (group.Name != "Recently Played")
                                 {

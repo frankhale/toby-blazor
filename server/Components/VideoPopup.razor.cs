@@ -21,9 +21,9 @@ namespace TobyBlazor.Components
 
         private bool AddedToFavorites = false;
 
-        protected override void OnInitialized()
+        protected async override Task OnInitializedAsync()
         {
-            AddedToFavorites = IsAddedToFavorites(SelectedVideo);
+            AddedToFavorites = await IsAddedToFavorites(SelectedVideo);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -34,9 +34,9 @@ namespace TobyBlazor.Components
             }
         }
 
-        public bool IsAddedToFavorites(Video video)
+        public async Task<bool> IsAddedToFavorites(Video video)
         {
-            var found = videos.FindVideoByYTId(video.YTId, "Favorites");
+            var found = await videos.FindVideoByYTIdAsync(video.YTId, "Favorites");
 
             if (found == null || found.Group != "Favorites")
             {
@@ -57,17 +57,17 @@ namespace TobyBlazor.Components
             await JSRuntime.InvokeVoidAsync("openModal", "ytModal");
         }
 
-        public void OnAddToFavoritesButtonToggle()
+        public async Task OnAddToFavoritesButtonToggle()
         {
             if (!AddedToFavorites)
             {
                 AddedToFavorites = true;
-                videos.AddVideo(SelectedVideo, "Favorites");
+                await videos.AddVideoAsync(SelectedVideo, "Favorites");
             }
             else
             {
                 AddedToFavorites = false;
-                videos.DeleteVideo(SelectedVideo.YTId, "Favorites");
+                await videos.DeleteVideoAsync(SelectedVideo.YTId, "Favorites");
             }
         }
     }

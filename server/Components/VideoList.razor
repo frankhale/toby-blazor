@@ -7,7 +7,7 @@
         <ul class="list-group">
             @foreach (var video in Videos)
             {
-                <li @key=video @onclick="@(() => VideoSelected(video))" class="list-group-item list-group-item-action d-flex justify-content-lg-start align-items-center @(SelectedVideo != null && video.YTId == SelectedVideo.YTId ? "active" : "")">
+                <li @key=video @onclick=@(async () => await VideoSelectedAsync(video)) class="list-group-item list-group-item-action d-flex justify-content-lg-start align-items-center @(SelectedVideo != null && video.YTId == SelectedVideo.YTId ? "active" : "")">
                     <img class="mr-3" src="@HelperExtensions.GetDefaultVideoThumbnail(video.YTId)" title=@WebUtility.HtmlDecode(@video.Title) />
                     <h5 class="mt-0" style="text-align:left;">@WebUtility.HtmlDecode(video.Title)</h5>
                 </li>
@@ -19,7 +19,7 @@
         <ul class="list-group list-group-horizontal-sm" style="flex-wrap: wrap;">
             @foreach (var video in Videos)
             {
-                <li @key=video class="list-group-item flex-fill text-center @(SelectedVideo != null && video.YTId == SelectedVideo.YTId ? "active" : "")" @onclick="@(() => VideoSelected(video))">
+                <li @key=video class="list-group-item flex-fill text-center @(SelectedVideo != null && video.YTId == SelectedVideo.YTId ? "active" : "")" @onclick="@(async () => await VideoSelectedAsync(video))">
                     <img src="@HelperExtensions.GetDefaultVideoThumbnail(video.YTId)" style="width:96px;height:auto;" title=@WebUtility.HtmlDecode(@video.Title) />
                 </li>
             }

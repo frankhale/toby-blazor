@@ -12,11 +12,17 @@ namespace TobyBlazor.Components
         private readonly IVideoRepository videos = new VideoRepository();
 
         private string SearchTerm { get; set; } = String.Empty;
+        private bool DeleteButtonDisabled { get; set; } = true;
+        private bool ApplyButtonDisabled { get; set; } = true;
+        private bool SearchButtonDisabled { get; set; } = true;
+        private List<Video> Videos { get; set; } = new List<Video>();
+        private List<string> VideosToDelete = new List<string>();
+        private List<Tuple<string, string>> VideoGroupsToChange = new List<Tuple<string, string>>();
 
         [Parameter]
         public EventCallback<string> SearchTermChanged { get; set; }
 
-        private Task OnSearchTermChanged(ChangeEventArgs e)
+        private async Task OnSearchTermChanged(ChangeEventArgs e)
         {
             SearchTerm = e.Value.ToString();
 
@@ -28,23 +34,15 @@ namespace TobyBlazor.Components
             {
                 SearchButtonDisabled = true;
 
-                Videos = videos.AllVideos();
+                Videos = await videos.AllVideosAsync();
             }
 
-            return SearchTermChanged.InvokeAsync(SearchTerm);
+            await SearchTermChanged.InvokeAsync(SearchTerm);
         }
 
-        private bool DeleteButtonDisabled { get; set; } = true;
-        private bool ApplyButtonDisabled { get; set; } = true;
-        private bool SearchButtonDisabled { get; set; } = true;
-
-        private List<Video> Videos { get; set; } = new List<Video>();
-        private List<string> VideosToDelete = new List<string>();
-        private List<Tuple<string, string>> VideoGroupsToChange = new List<Tuple<string, string>>();
-
-        protected override void OnInitialized()
+        protected async override Task OnInitializedAsync()
         {
-            Videos = videos.AllVideos();
+            Videos = await videos.AllVideosAsync();
         }
 
         private string GetVideoThumbnail(string ytid)
@@ -52,14 +50,14 @@ namespace TobyBlazor.Components
             return String.Format("https://i.ytimg.com/vi/{0}/default.jpg", ytid);
         }
 
-        private void Search(string searchTerm)
+        private async Task SearchAsync(string searchTerm)
         {
             if (!String.IsNullOrEmpty(searchTerm))
             {
                 Videos = searchTerm switch
                 {
-                    _ when searchTerm.ToLower().StartsWith("/all") => videos.AllVideos(),
-                    _ => videos.FindVideo(searchTerm)
+                    _ when searchTerm.ToLower().StartsWith("/all") => await videos.AllVideosAsync(),
+                    _ => await videos.FindVideoAsync(searchTerm)
                 };
             }
         }
@@ -104,15 +102,15 @@ namespace TobyBlazor.Components
             DeleteButtonDisabled = VideosToDelete.Count <= 0;
         }
 
-        private void OnDeleteButtonClicked()
+        private async Task OnDeleteButtonClicked()
         {
             if (VideosToDelete.Count > 0)
             {
                 var deleteVideos = new List<Video>();
 
-                VideosToDelete.ForEach(x =>
+                VideosToDelete.ForEach(async x =>
                 {
-                    var foundVideo = videos.FindVideoByYTId(x);
+                    var foundVideo = await videos.FindVideoByYTIdAsync(x);
                     if (foundVideo != null)
                     {
                         deleteVideos.Add(foundVideo);
@@ -121,17 +119,17 @@ namespace TobyBlazor.Components
 
                 if (deleteVideos.Count > 0)
                 {
-                    videos.DeleteVideoRange(deleteVideos);
+                    await videos.DeleteVideoRangeAsync(deleteVideos);
                     VideosToDelete = new List<string>();
                     DeleteButtonDisabled = true;
 
                     if (!String.IsNullOrEmpty(SearchTerm))
                     {
-                        Search(SearchTerm);
+                        await SearchAsync(SearchTerm);
                     }
                     else
                     {
-                        Videos = videos.AllVideos();
+                        Videos = await videos.AllVideosAsync();
                     }
                 }
             }
@@ -141,9 +139,9 @@ namespace TobyBlazor.Components
         {
             if (VideoGroupsToChange.Count > 0)
             {
-                VideoGroupsToChange.ForEach(x =>
+                VideoGroupsToChange.ForEach(async x =>
                 {
-                    videos.UpdateVideoGroup(x.Item1, x.Item2);
+                    await videos.UpdateVideoGroupAsync(x.Item1, x.Item2);
                 });
 
                 VideoGroupsToChange = new List<Tuple<string, string>>();
@@ -151,9 +149,9 @@ namespace TobyBlazor.Components
             }
         }
 
-        private void OnSearchButtonClicked()
+        private async Task OnSearchButtonClicked()
         {
-            Search(SearchTerm);
+            await SearchAsync(SearchTerm);
         }
     }
 }

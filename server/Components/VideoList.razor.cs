@@ -20,11 +20,11 @@ namespace TobyBlazor.Components
         private readonly IVideoRepository videos = new VideoRepository();
         private Video SelectedVideo { get; set; }
 
-        protected override void OnInitialized()
+        protected async override Task OnInitializedAsync()
         {
             if (RecentlyPlayed)
             {
-                Videos = videos.GetRecentlyPlayedVideos(5);
+                Videos = await videos.GetRecentlyPlayedVideosAsync(5);
             }
         }
 
@@ -36,10 +36,10 @@ namespace TobyBlazor.Components
             }
         }
 
-        private async Task VideoSelected(Video video)
+        private async Task VideoSelectedAsync(Video video)
         {
             SelectedVideo = video;
-            videos.AddVideoToRecentlyPlayed(video);
+            await videos.AddVideoToRecentlyPlayedAsync(video);
             await OnSelectedVideo.InvokeAsync(video);
         }
     }
