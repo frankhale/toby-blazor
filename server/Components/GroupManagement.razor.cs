@@ -11,10 +11,7 @@ namespace TobyBlazor.Components
     {
         private readonly IVideoRepository videos = new VideoRepository();
 
-        private string SearchTerm;
-
-        [Parameter]
-        public EventCallback<string> SearchTermChanged { get; set; }
+        private string SearchTerm { get; set; } = string.Empty;
 
         private async Task OnSearchTermChanged(ChangeEventArgs e)
         {
@@ -32,10 +29,8 @@ namespace TobyBlazor.Components
 
                 Groups = await videos.AllGroupsAsync();
             }
-
-            await SearchTermChanged.InvokeAsync(SearchTerm);
         }
-        
+
         private bool DeleteButtonDisabled { get; set; } = true;
         private bool AddButtonDisabled { get; set; } = true;
         private bool SearchButtonDisabled { get; set; } = true;
@@ -110,14 +105,14 @@ namespace TobyBlazor.Components
         {
             await videos.AddGroupAsync(SearchTerm);
             Groups = await videos.AllGroupsAsync();
-            SearchTerm = String.Empty;
-            //await SearchTermChanged.InvokeAsync(String.Empty);
+            // FIXME: This is not working, boo! Can't bind value and do on-input stupid fucking this doesn't work...!!!?!?!?!?!?!?!
+            SearchTerm = string.Empty;
             await OnSearchTermChanged(new ChangeEventArgs() { Value = String.Empty });
         }
 
-        private void OnSearchButtonClicked()
+        private async Task OnSearchButtonClicked()
         {
-            Search(SearchTerm);
+            await Search(SearchTerm);
         }
     }
 }

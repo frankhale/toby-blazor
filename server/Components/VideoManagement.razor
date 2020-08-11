@@ -1,4 +1,4 @@
-﻿@using System.Net 
+﻿@using System.Net
 
 <div style="margin-top:25px;">
     <nav class="navbar navbar-light bg-light">
@@ -9,13 +9,13 @@
         <div class="form-inline">
             <form @onsubmit=@OnSearchButtonClicked>
                 <div class="input-group">
-                    <input type="text" 
-                           class="form-control"                            
-                           placeholder="Search for video..." 
-                           aria-label="Search for video" 
+                    <input type="text"
+                           class="form-control"
+                           placeholder="Search for video..."
+                           aria-label="Search for video"
                            aria-describedby="button-addon4"                           
                            @oninput=@OnSearchTermChanged>
-                    <div class="input-group-append" id="button-addon4">                        
+                    <div class="input-group-append" id="button-addon4">
                         <button class="btn btn btn-success" type="button" @onclick=@OnSearchButtonClicked disabled=@SearchButtonDisabled>Search</button>
                     </div>
                 </div>

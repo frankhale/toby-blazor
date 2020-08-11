@@ -19,9 +19,6 @@ namespace TobyBlazor.Components
         private List<string> VideosToDelete = new List<string>();
         private List<Tuple<string, string>> VideoGroupsToChange = new List<Tuple<string, string>>();
 
-        [Parameter]
-        public EventCallback<string> SearchTermChanged { get; set; }
-
         private async Task OnSearchTermChanged(ChangeEventArgs e)
         {
             SearchTerm = e.Value.ToString();
@@ -36,8 +33,6 @@ namespace TobyBlazor.Components
 
                 Videos = await videos.AllVideosAsync();
             }
-
-            await SearchTermChanged.InvokeAsync(SearchTerm);
         }
 
         protected async override Task OnInitializedAsync()
