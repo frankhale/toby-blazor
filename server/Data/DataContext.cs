@@ -12,6 +12,6 @@ namespace TobyBlazor.Data
         {
             optionsBuilder.UseSqlite("Filename=videos.db");
             base.OnConfiguring(optionsBuilder);
-        }        
+        }
     }
 }

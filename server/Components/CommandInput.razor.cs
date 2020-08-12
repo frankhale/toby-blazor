@@ -16,11 +16,11 @@ namespace TobyBlazor.Components
 
         [Parameter]
         public EventCallback<SearchResult> OnSearch { get; set; }
-        
+
         public class ThrowAwayDataItem : IDataItem { }
 
         private async Task<SearchResult> CreateResult(SearchResultType type, Func<Task<Message>> action)
-        {            
+        {
             return await CreateResult<ThrowAwayDataItem>(type, null, null, action);
         }
 
@@ -71,7 +71,8 @@ namespace TobyBlazor.Components
                     _ when MatchesCommandList(searchValue[0], "/mgg", "/manage-groups") => CreateResult(SearchResultType.ManageGroups, await videos.AllGroupsAsync()),
                     _ when MatchesCommandList(searchValue[0], "/crp", "/clear-recently-played") =>
                         CreateResult(SearchResultType.Command,
-                            async () => {
+                            async () =>
+                            {
                                 await videos.DeleteVideoRangeByGroupAsync("Recently Played");
                                 return new Message() { Value = "Deleted all the videos in the Recently Played group", Type = "alert-danger" };
                             }

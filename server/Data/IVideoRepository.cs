@@ -25,10 +25,10 @@ namespace TobyBlazor.Data
         #endregion
 
         #region Add/Update - Videos/Groups
-        public Task AddGroupAsync(string name);                      
+        public Task AddGroupAsync(string name);
         public Task AddVideoAsync(Video v, string group);
         public Task AddVideoToRecentlyPlayedAsync(Video video);
-        public Task UpdateVideoGroupAsync(string ytid, string group);        
+        public Task UpdateVideoGroupAsync(string ytid, string group);
         #endregion
 
         #region Delete Videos/Groups

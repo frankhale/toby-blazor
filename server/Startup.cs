@@ -21,7 +21,7 @@ namespace TobyBlazor
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
-            services.AddServerSideBlazor();            
+            services.AddServerSideBlazor();
             services.AddDbContext<DataContext>();
         }
 
