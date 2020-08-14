@@ -186,3 +186,13 @@ app {
     padding: 0px !important;
     padding-right: 22px !important;
 }
+
+.video-title {
+    text-align: left;
+    cursor: default;
+}
+
+.video-icon-horizontal-list {
+    width: 96px;
+    height: auto;
+}
