@@ -1,5 +1,7 @@
 # Toby (Blazor)
 
+**Requires: .NET 5 preview**
+
 This is a rewrite of [Toby](https://github.com/frankhale/toby) using C# and
 Blazor. This project is using the server-side hosting model.
 
@@ -74,7 +76,7 @@ Frank Hale &lt;frankhale@gmail.com&gt;
 
 ## Date
 
-9 August 2020
+13 August 2020
 
 ## License
 
