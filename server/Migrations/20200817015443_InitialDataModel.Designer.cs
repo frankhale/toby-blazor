@@ -9,14 +9,14 @@ using TobyBlazor.Data;
 namespace TobyBlazor.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200814015806_InitialDataModel")]
+    [Migration("20200817015443_InitialDataModel")]
     partial class InitialDataModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.7");
+                .HasAnnotation("ProductVersion", "5.0.0-preview.7.20365.15");
 
             modelBuilder.Entity("TobyBlazor.Models.Group", b =>
                 {
@@ -30,6 +30,20 @@ namespace TobyBlazor.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Groups");
+                });
+
+            modelBuilder.Entity("TobyBlazor.Models.Preferences", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CurrentVideoPage")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Preferences");
                 });
 
             modelBuilder.Entity("TobyBlazor.Models.Video", b =>

@@ -15,11 +15,6 @@ namespace TobyBlazor.Components
         [Parameter]
         public EventCallback OnClose { get; set; }
 
-        private async Task CallClose()
-        {
-            await OnClose.InvokeAsync(null);
-        }
-
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
@@ -27,6 +22,11 @@ namespace TobyBlazor.Components
                 await Task.Delay(TimeSpan.FromSeconds(5));
                 await CallClose();
             }
+        }
+
+        private async Task CallClose()
+        {
+            await OnClose.InvokeAsync(null);
         }
 
         private async void OnCloseButtonClick()

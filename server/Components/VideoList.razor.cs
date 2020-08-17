@@ -20,7 +20,7 @@ namespace TobyBlazor.Components
         private readonly IVideoRepository videos = new VideoRepository();
         private Video SelectedVideo { get; set; }
 
-        protected async override Task OnInitializedAsync()
+        protected override async Task OnInitializedAsync()
         {
             if (RecentlyPlayed)
             {

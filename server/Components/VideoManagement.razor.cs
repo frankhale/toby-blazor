@@ -10,7 +10,6 @@ namespace TobyBlazor.Components
     public partial class VideoManagement : ComponentBase
     {
         private readonly IVideoRepository videos = new VideoRepository();
-
         private string SearchTerm { get; set; } = String.Empty;
         private bool DeleteButtonDisabled { get; set; } = true;
         private bool ApplyButtonDisabled { get; set; } = true;
@@ -18,6 +17,11 @@ namespace TobyBlazor.Components
         private List<Video> Videos { get; set; } = new List<Video>();
         private List<string> VideosToDelete = new List<string>();
         private List<Tuple<string, string>> VideoGroupsToChange = new List<Tuple<string, string>>();
+
+        protected override async Task OnInitializedAsync()
+        {
+            Videos = await videos.AllVideosAsync();
+        }
 
         private async Task OnSearchTermChanged(ChangeEventArgs e)
         {
@@ -35,19 +39,14 @@ namespace TobyBlazor.Components
             }
         }
 
-        protected async override Task OnInitializedAsync()
-        {
-            Videos = await videos.AllVideosAsync();
-        }
-
         private string GetVideoThumbnail(string ytid)
         {
-            return String.Format("https://i.ytimg.com/vi/{0}/default.jpg", ytid);
+            return string.Format("https://i.ytimg.com/vi/{0}/default.jpg", ytid);
         }
 
         private async Task SearchAsync(string searchTerm)
         {
-            if (!String.IsNullOrEmpty(searchTerm))
+            if (!string.IsNullOrEmpty(searchTerm))
             {
                 Videos = searchTerm switch
                 {
@@ -118,7 +117,7 @@ namespace TobyBlazor.Components
                     VideosToDelete = new List<string>();
                     DeleteButtonDisabled = true;
 
-                    if (!String.IsNullOrEmpty(SearchTerm))
+                    if (!string.IsNullOrEmpty(SearchTerm))
                     {
                         await SearchAsync(SearchTerm);
                     }

@@ -10,8 +10,17 @@ namespace TobyBlazor.Components
     public partial class GroupManagement : ComponentBase
     {
         private readonly IVideoRepository videos = new VideoRepository();
-
         private string SearchTerm { get; set; } = string.Empty;
+        private bool DeleteButtonDisabled { get; set; } = true;
+        private bool AddButtonDisabled { get; set; } = true;
+        private bool SearchButtonDisabled { get; set; } = true;
+        private List<Group> Groups { get; set; } = new List<Group>();
+        private List<string> GroupsToDelete = new List<string>();       
+
+        protected override async Task OnInitializedAsync()
+        {
+            Groups = await videos.AllGroupsAsync();
+        }
 
         private async Task OnSearchTermChanged(ChangeEventArgs e)
         {
@@ -29,18 +38,6 @@ namespace TobyBlazor.Components
 
                 Groups = await videos.AllGroupsAsync();
             }
-        }
-
-        private bool DeleteButtonDisabled { get; set; } = true;
-        private bool AddButtonDisabled { get; set; } = true;
-        private bool SearchButtonDisabled { get; set; } = true;
-
-        private List<Group> Groups { get; set; } = new List<Group>();
-        private List<string> GroupsToDelete = new List<string>();
-
-        protected async override Task OnInitializedAsync()
-        {
-            Groups = await videos.AllGroupsAsync();
         }
 
         private async Task Search(string searchTerm)

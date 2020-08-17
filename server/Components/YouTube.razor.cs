@@ -8,16 +8,16 @@ namespace TobyBlazor.Components
 {
     public partial class YouTube : ComponentBase
     {
+        [Parameter]
+        public string VideoId { get; set; }
+
         [Inject]
-        IJSRuntime JsRuntime { get; set; }
+        private IJSRuntime JsRuntime { get; set; }
 
         private Timer _timer;
         private bool playerReady = false;
         private bool apiReady = false;
         private bool playerCreated = false;
-
-        [Parameter]
-        public string VideoId { get; set; }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {

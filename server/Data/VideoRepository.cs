@@ -270,5 +270,25 @@ namespace TobyBlazor.Data
             await db.SaveChangesAsync();
         }
         #endregion
+
+        #region Preferences
+        public async Task SetCurrentVideoPage(int page, int linkPage)
+        {
+            db.Preferences.RemoveRange(db.Preferences.ToList());
+            await db.SaveChangesAsync();
+
+            db.Preferences.Add(new Preferences
+            {
+                CurrentVideoPage = page,
+                CurrentVideoPageLinkPage = linkPage
+            });
+            await db.SaveChangesAsync();
+        }
+
+        public async Task<Preferences> GetCurrentPreferences()
+        {
+            return await db.Preferences.FirstOrDefaultAsync();
+        }
+        #endregion
     }
 }

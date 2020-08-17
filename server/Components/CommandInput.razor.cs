@@ -10,15 +10,15 @@ namespace TobyBlazor.Components
 {
     public partial class CommandInput : ComponentBase
     {
-        private readonly IVideoRepository videos = new VideoRepository();
-
-        private string SearchTerm { get; set; } = "";
-
         [Parameter]
         public EventCallback<SearchResult> OnSearch { get; set; }
 
         public class ThrowAwayDataItem : IDataItem { }
 
+        private readonly IVideoRepository videos = new VideoRepository();
+
+        private string SearchTerm { get; set; } = "";
+        
         private async Task<SearchResult> CreateResult(SearchResultType type, Func<Task<Message>> action)
         {
             return await CreateResult<ThrowAwayDataItem>(type, null, null, action);
@@ -53,9 +53,9 @@ namespace TobyBlazor.Components
 
         private async void OnKeyPress(string key)
         {
-            static bool MatchesCommandList(string value, params string[] commands) => (commands.Where(x => x == value).FirstOrDefault() != null);
+            static bool MatchesCommandList(string value, params string[] commands) => commands.Where(x => x == value).FirstOrDefault() != null;
 
-            if (key == "Enter" && !String.IsNullOrEmpty(SearchTerm))
+            if (key == "Enter" && !string.IsNullOrEmpty(SearchTerm))
             {
                 var searchValue = SearchTerm.ToLower().Split(new char[] { ' ' }, 2);
 

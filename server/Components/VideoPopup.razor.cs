@@ -21,7 +21,7 @@ namespace TobyBlazor.Components
 
         private bool AddedToFavorites = false;
 
-        protected async override Task OnInitializedAsync()
+        protected override async Task OnInitializedAsync()
         {
             AddedToFavorites = await IsAddedToFavorites(SelectedVideo);
         }
@@ -32,6 +32,11 @@ namespace TobyBlazor.Components
             {
                 await OpenModal();
             }
+        }
+
+        private async Task OpenModal()
+        {
+            await JSRuntime.InvokeVoidAsync("openModal", "ytModal");
         }
 
         public async Task<bool> IsAddedToFavorites(Video video)
@@ -50,11 +55,6 @@ namespace TobyBlazor.Components
         {
             await JSRuntime.InvokeVoidAsync("closeModal", "ytModal");
             await OnPopupClosed.InvokeAsync(EventCallback.Empty);
-        }
-
-        private async Task OpenModal()
-        {
-            await JSRuntime.InvokeVoidAsync("openModal", "ytModal");
         }
 
         public async Task OnAddToFavoritesButtonToggle()
