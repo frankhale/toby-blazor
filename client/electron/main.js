@@ -5,8 +5,8 @@ let win;
 function createWindow() {
   win = new BrowserWindow({
     width: 1024,
-    height: 768,
-    icon: __dirname + "/toby.png"
+    height: 576,
+    icon: __dirname + "/toby.png",
   });
   win.removeMenu();
   win.loadURL("http://localhost:5001");
