@@ -31,7 +31,7 @@
     }
 </div>
 
-@if (SelectedVideo != null && !String.IsNullOrEmpty(SelectedVideo.YTId))
+@if (SelectedVideo != null && !string.IsNullOrEmpty(SelectedVideo.YTId))
 {
     <WindowTitle Title=@WebUtility.HtmlDecode(SelectedVideo.Title) />
     <VideoPopup SelectedVideo=@SelectedVideo OnPopupClosed=@OnVideoDismissed />
@@ -45,6 +45,7 @@ else
 {
     <Notification Message=@Result.Message.Value NotificationType=@Result.Message.Type OnClose=@OnNotificationClose />
 }
+
 
 @code {
     private readonly IVideoRepository videos = new VideoRepository();
