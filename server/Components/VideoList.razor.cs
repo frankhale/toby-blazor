@@ -20,14 +20,6 @@ namespace TobyBlazor.Components
         private readonly IVideoRepository videos = new VideoRepository();
         private Video SelectedVideo { get; set; }
 
-        protected override async Task OnInitializedAsync()
-        {
-            if (RecentlyPlayed)
-            {
-                Videos = await videos.GetRecentlyPlayedVideosAsync(5);
-            }
-        }
-
         protected override void OnAfterRender(bool firstRender)
         {
             if (SelectedVideo != null)
