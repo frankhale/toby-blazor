@@ -58,7 +58,7 @@ namespace TobyBlazor.Data
             var youtubeService = new YouTubeService(new BaseClientService.Initializer()
             {
                 ApiKey = Environment.GetEnvironmentVariable("YOUTUBE_API_KEY"),
-                ApplicationName = this.GetType().ToString()
+                ApplicationName = GetType().ToString()
             });
 
             var searchRequest = youtubeService.Search.List("snippet");
@@ -238,7 +238,16 @@ namespace TobyBlazor.Data
 
         public async Task DeleteVideoRangeAsync(List<Video> videos)
         {
-            db.Videos.RemoveRange(videos);
+            foreach(var v in videos)
+            {
+                var foundVideos = await db.Videos.Where(x => x.YTId == v.YTId).ToListAsync();
+
+                if(foundVideos != null)
+                {
+                    db.Videos.RemoveRange(foundVideos);
+                }
+            }
+
             await db.SaveChangesAsync();
         }
 

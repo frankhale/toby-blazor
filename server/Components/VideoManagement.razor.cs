@@ -9,6 +9,9 @@ namespace TobyBlazor.Components
 {
     public partial class VideoManagement : ComponentBase
     {
+        [Parameter]
+        public EventCallback OnDeleteVideo { get; set; }
+
         private readonly IVideoRepository videos = new VideoRepository();
         private string SearchTerm { get; set; } = String.Empty;
         private bool DeleteButtonDisabled { get; set; } = true;
@@ -126,6 +129,8 @@ namespace TobyBlazor.Components
                         Videos = await videos.AllVideosAsync();
                     }
                 }
+
+                await OnDeleteVideo.InvokeAsync(null);
             }
         }
 

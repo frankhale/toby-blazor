@@ -12,7 +12,7 @@
 
     @if (Result.Type == SearchResultType.Manage)
     {
-        <VideoManagement />
+        <VideoManagement OnDeleteVideo=@OnDeleteVideo />
     }
     else if (Result.Type == SearchResultType.ManageGroups)
     {

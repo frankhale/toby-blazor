@@ -17,7 +17,6 @@ namespace TobyBlazor.Pages
         private List<Video> topFiveRecentlyPlayed = new List<Video>();
         private Video SelectedVideo { get; set; }
 
-
         protected override async Task OnInitializedAsync()
         {
             topFiveRecentlyPlayed = await videos.GetRecentlyPlayedVideosAsync(5);
@@ -53,6 +52,11 @@ namespace TobyBlazor.Pages
         public void OnVideoDismissed()
         {
             SelectedVideo = null;
+        }
+
+        public async Task OnDeleteVideo()
+        {
+            topFiveRecentlyPlayed = await videos.GetRecentlyPlayedVideosAsync(5);
         }
     }
 }
