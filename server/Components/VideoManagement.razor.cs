@@ -11,20 +11,18 @@ namespace TobyBlazor.Components
     {
         [Parameter]
         public EventCallback OnDeleteVideo { get; set; }
+        [Parameter]
+        public List<Video> Videos { get; set; }
+        [Parameter]
+        public bool RecentlyPlayed { get; set; }
 
         private readonly IVideoRepository videos = new VideoRepository();
-        private string SearchTerm { get; set; } = String.Empty;
+        private string SearchTerm { get; set; } = string.Empty;
         private bool DeleteButtonDisabled { get; set; } = true;
         private bool ApplyButtonDisabled { get; set; } = true;
         private bool SearchButtonDisabled { get; set; } = true;
-        private List<Video> Videos { get; set; } = new List<Video>();
         private List<string> VideosToDelete = new List<string>();
         private List<Tuple<string, string>> VideoGroupsToChange = new List<Tuple<string, string>>();
-
-        protected override async Task OnInitializedAsync()
-        {
-            Videos = await videos.AllVideosAsync();
-        }
 
         private async Task OnSearchTermChanged(ChangeEventArgs e)
         {
@@ -108,6 +106,8 @@ namespace TobyBlazor.Components
                 VideosToDelete.ForEach(async x =>
                 {
                     var foundVideo = await videos.FindVideoByYTIdAsync(x);
+                    Videos.RemoveAll(v => v.YTId == x);
+
                     if (foundVideo != null)
                     {
                         deleteVideos.Add(foundVideo);
@@ -117,16 +117,20 @@ namespace TobyBlazor.Components
                 if (deleteVideos.Count > 0)
                 {
                     await videos.DeleteVideoRangeAsync(deleteVideos);
+
                     VideosToDelete = new List<string>();
                     DeleteButtonDisabled = true;
 
-                    if (!string.IsNullOrEmpty(SearchTerm))
+                    if (!RecentlyPlayed)
                     {
-                        await SearchAsync(SearchTerm);
-                    }
-                    else
-                    {
-                        Videos = await videos.AllVideosAsync();
+                        if (!string.IsNullOrEmpty(SearchTerm))
+                        {
+                            await SearchAsync(SearchTerm);
+                        }
+                        else
+                        {
+                            Videos = await videos.AllVideosAsync();
+                        }
                     }
                 }
 

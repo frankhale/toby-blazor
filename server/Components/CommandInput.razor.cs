@@ -18,7 +18,7 @@ namespace TobyBlazor.Components
         private readonly IVideoRepository videos = new VideoRepository();
 
         private string SearchTerm { get; set; } = "";
-        
+
         private async Task<SearchResult> CreateResult(SearchResultType type, Func<Task<Message>> action)
         {
             return await CreateResult<ThrowAwayDataItem>(type, null, null, action);
@@ -69,6 +69,7 @@ namespace TobyBlazor.Components
                     _ when MatchesCommandList(searchValue[0], "/clear") => CreateResult(SearchResultType.Search, new List<Video>()),
                     _ when MatchesCommandList(searchValue[0], "/mg", "/manage") => CreateResult(SearchResultType.Manage, await videos.AllVideosAsync()),
                     _ when MatchesCommandList(searchValue[0], "/mgg", "/manage-groups") => CreateResult(SearchResultType.ManageGroups, await videos.AllGroupsAsync()),
+                    _ when MatchesCommandList(searchValue[0], "/mgrp", "/manage-recently-played") => CreateResult(SearchResultType.ManageRecentlyPlayed, await videos.FindVideoByGroupAsync("Recently Played")),
                     _ when MatchesCommandList(searchValue[0], "/crp", "/clear-recently-played") =>
                         CreateResult(SearchResultType.Command,
                             async () =>

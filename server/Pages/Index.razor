@@ -10,9 +10,9 @@
         <VideoList Videos=@topFiveRecentlyPlayed RecentlyPlayed=true OnSelectedVideo=@OnSelectedVideo />
     </div>
 
-    @if (Result.Type == SearchResultType.Manage)
+    @if (Result.Type == SearchResultType.Manage || Result.Type == SearchResultType.ManageRecentlyPlayed)
     {
-        <VideoManagement OnDeleteVideo=@OnDeleteVideo />
+        <VideoManagement Videos=@Result.Videos OnDeleteVideo=@OnDeleteVideo RecentlyPlayed=@(Result.Type == SearchResultType.ManageRecentlyPlayed ? true : false) />
     }
     else if (Result.Type == SearchResultType.ManageGroups)
     {

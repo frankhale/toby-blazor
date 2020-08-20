@@ -7,6 +7,7 @@ namespace TobyBlazor.Models
         Command,
         Manage,
         ManageGroups,
+        ManageRecentlyPlayed,
         Search
     }
 

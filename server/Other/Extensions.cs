@@ -18,7 +18,7 @@ namespace TobyBlazor.Other
 
         public static string GetDefaultVideoThumbnail(string ytid)
         {
-            return String.Format("https://i.ytimg.com/vi/{0}/default.jpg", ytid);
-        }
+            return string.Format("https://i.ytimg.com/vi/{0}/default.jpg", ytid);
+        }        
     }
 }

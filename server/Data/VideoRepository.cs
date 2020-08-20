@@ -43,7 +43,7 @@ namespace TobyBlazor.Data
 
         public async Task<Video> FindVideoByYTIdAsync(string ytid)
         {
-            return await db.Videos.Where(x => x.YTId == ytid && x.Group != "Recently Played")
+            return await db.Videos.Where(x => x.YTId == ytid) // && x.Group != "Recently Played")
                                   .FirstOrDefaultAsync();
         }
 

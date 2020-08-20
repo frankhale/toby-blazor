@@ -5,7 +5,7 @@
 This is a rewrite of [Toby](https://github.com/frankhale/toby) using C# and
 Blazor. This project is using the server-side hosting model.
 
-This is a simple YouTube player.
+This is a simple YouTube player for your favorite videos.
 
 ## Status
 
@@ -15,7 +15,8 @@ to manage the db graphically.
 
 The UI is built with Bootstrap. I'm using Bootstrap directly at the moment
 instead of using libraries such as [BlazorStrap](https://github.com/chanan/BlazorStrap)
-or [Blazorise](https://github.com/stsrki/Blazorise).
+or [Blazorise](https://github.com/stsrki/Blazorise). I'm using the Cyborg theme
+from [Bootswatch](https://bootswatch.com/).
 
 ## Usage
 
@@ -41,6 +42,7 @@ Search commands:
 - `/group [name]` or `/g [name]`: lists videos in a specific group
 - `/favorites` or `/fav`: list favorite videos
 - `/manage` or `/mg`: video management
+- `/manage-recently-played` or `/mgrp`: recently played management
 - `/manage-groups` or `/mgg`: group management
 - `/recently-played` or `/rp`: list all recently played videos
 - `[search term]`: search locally for video
@@ -80,7 +82,7 @@ Frank Hale &lt;frankhale@gmail.com&gt;
 
 ## Date
 
-13 August 2020
+19 August 2020
 
 ## License
 
