@@ -238,11 +238,11 @@ namespace TobyBlazor.Data
 
         public async Task DeleteVideoRangeAsync(List<Video> videos)
         {
-            foreach(var v in videos)
+            foreach (var v in videos)
             {
                 var foundVideos = await db.Videos.Where(x => x.YTId == v.YTId).ToListAsync();
 
-                if(foundVideos != null)
+                if (foundVideos != null)
                 {
                     db.Videos.RemoveRange(foundVideos);
                 }
@@ -281,16 +281,41 @@ namespace TobyBlazor.Data
         #endregion
 
         #region Preferences
-        public async Task SetCurrentVideoPage(int page, int linkPage)
+        public async Task SetCurrentVideoPage(bool recentlyPlayed, int page, int linkPage)
         {
-            db.Preferences.RemoveRange(db.Preferences.ToList());
-            await db.SaveChangesAsync();
+            var preferences = await db.Preferences.FirstOrDefaultAsync();
 
-            db.Preferences.Add(new Preferences
+            if (preferences == null)
             {
-                CurrentVideoPage = page,
-                CurrentVideoPageLinkPage = linkPage
-            });
+                if (recentlyPlayed)
+                {
+                    db.Preferences.Add(new Preferences
+                    {
+                        CurrentRecentlyPlayedVideoPage = page
+                    });
+
+                }
+                else
+                {
+                    db.Preferences.Add(new Preferences
+                    {
+                        CurrentVideoPage = page,
+                        CurrentVideoPageLinkPage = linkPage
+                    });
+                }
+            }
+            else
+            {
+                if (recentlyPlayed) 
+                {
+                    preferences.CurrentRecentlyPlayedVideoPage = page;
+                }
+                else
+                {
+                    preferences.CurrentVideoPage = page;
+                    preferences.CurrentVideoPageLinkPage = linkPage;
+                }
+            }
             await db.SaveChangesAsync();
         }
 

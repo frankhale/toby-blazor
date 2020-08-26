@@ -18,18 +18,22 @@ namespace TobyBlazor.Components
         [Parameter]
         public RenderFragment<List<Models.Video>> Content { get; set; }
 
+        [Parameter]
+        public bool RecentlyPlayed { get; set; }
+
         private readonly IVideoRepository videos = new VideoRepository();
         private const int ChunkSize = 10;
         private List<List<Models.Video>> Pages { get; set; }
         private List<List<int>> PageIndices { get; set; }
         private int CurrentPage { get; set; } = 1;
         private int CurrentPageLinkPage { get; set; } = 1;
-        private string Message { get; set; } = String.Empty;
-        private bool PreviousButtonDisabled { get; set; } = false;
-        private bool NextButtonDisabled { get; set; } = false;
+        private string Message { get; set; } = string.Empty;
+        private bool PreviousButtonDisabled { get; set; }
+        private bool NextButtonDisabled { get; set; }
 
         protected async override Task OnParametersSetAsync()
         {
+            await base.OnParametersSetAsync();
             await InitializePages(true);
         }
 
@@ -44,15 +48,15 @@ namespace TobyBlazor.Components
 
             if (preferences != null)
             {
-                preferredPage = preferences.CurrentVideoPage;
+                preferredPage = (RecentlyPlayed) ? preferences.CurrentRecentlyPlayedVideoPage : preferences.CurrentVideoPage;
                 preferredLinkPage = preferences.CurrentVideoPageLinkPage;
 
-                if(preferredPage == 0 || preferredPage > Pages.Count())
+                if (preferredPage == 0 || preferredPage > Pages.Count)
                 {
                     preferredPage = 1;
                 }
 
-                if(preferredLinkPage == 0 || preferredLinkPage > PageIndices.Count())
+                if (preferredLinkPage == 0 || preferredLinkPage > PageIndices.Count)
                 {
                     preferredLinkPage = 1;
                 }
@@ -86,7 +90,7 @@ namespace TobyBlazor.Components
 
         private void OnPageButtonClick(int page)
         {
-            videos.SetCurrentVideoPage(page, CurrentPageLinkPage);
+            videos.SetCurrentVideoPage(RecentlyPlayed, page, CurrentPageLinkPage);
 
             CurrentPage = page;
         }
@@ -98,7 +102,7 @@ namespace TobyBlazor.Components
                 CurrentPageLinkPage -= 1;
             }
 
-            videos.SetCurrentVideoPage(CurrentPage, CurrentPageLinkPage);
+            videos.SetCurrentVideoPage(RecentlyPlayed, CurrentPage, CurrentPageLinkPage);
 
             TogglePrevNextButtonsDisabled();
         }
@@ -110,7 +114,7 @@ namespace TobyBlazor.Components
                 CurrentPageLinkPage += 1;
             }
 
-            videos.SetCurrentVideoPage(CurrentPage, CurrentPageLinkPage);
+            videos.SetCurrentVideoPage(RecentlyPlayed, CurrentPage, CurrentPageLinkPage);
 
             TogglePrevNextButtonsDisabled();
         }

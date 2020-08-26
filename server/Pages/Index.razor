@@ -20,7 +20,7 @@
     }
     else if (Result.Type == SearchResultType.Search)
     {
-        <VideoPagination Videos=@Result.Videos>
+        <VideoPagination RecentlyPlayed=@RecentlyPlayed Videos=@Result.Videos>
             <Content>
                 <VideoList Videos=@context OnSelectedVideo=@OnSelectedVideo />
             </Content>

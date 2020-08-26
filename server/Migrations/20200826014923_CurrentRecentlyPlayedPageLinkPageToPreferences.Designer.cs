@@ -2,19 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TobyBlazor.Data;
 
 namespace TobyBlazor.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200826014923_CurrentRecentlyPlayedPageLinkPageToPreferences")]
+    partial class CurrentRecentlyPlayedPageLinkPageToPreferences
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "5.0.0-preview.8.20407.4");
+                .HasAnnotation("ProductVersion", "5.0.0-preview.7.20365.15");
 
             modelBuilder.Entity("TobyBlazor.Models.Group", b =>
                 {
@@ -36,7 +38,7 @@ namespace TobyBlazor.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("CurrentRecentlyPlayedVideoPage")
+                    b.Property<int>("CurrentRecentlyPlayedPageLinkPage")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("CurrentVideoPage")

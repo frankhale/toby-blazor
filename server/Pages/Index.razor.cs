@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TobyBlazor.Data;
 using TobyBlazor.Models;
@@ -16,6 +17,8 @@ namespace TobyBlazor.Pages
         private SearchResult Result { get; set; } = new SearchResult();
         private List<Video> topFiveRecentlyPlayed = new List<Video>();
         private Video SelectedVideo { get; set; }
+
+        private bool RecentlyPlayed { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -33,6 +36,15 @@ namespace TobyBlazor.Pages
         public void OnSearchResults(SearchResult result)
         {
             Result = result;
+
+            if(result.Videos.Any(x => x.Group == "Recently Played"))
+            {
+                RecentlyPlayed = true;
+            } else
+            {
+                RecentlyPlayed = false;
+            }
+            this.StateHasChanged();
         }
 
         public void OnNotificationClose()

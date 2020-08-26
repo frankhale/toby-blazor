@@ -39,8 +39,8 @@ namespace TobyBlazor.Data
         public Task DeleteVideoRangeByGroupAsync(string group);
         #endregion
 
-        #region Preferences
-        public Task SetCurrentVideoPage(int page, int linkPage);
+        #region Preferences             
+        public Task SetCurrentVideoPage(bool recentlyPlayed, int page, int linkPage);
         public Task<Preferences> GetCurrentPreferences();
         #endregion
     }
