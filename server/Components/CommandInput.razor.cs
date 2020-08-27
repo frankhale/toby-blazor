@@ -51,9 +51,9 @@ namespace TobyBlazor.Components
             return result;
         }
 
-        private async void OnKeyPress(string key)
+        private async Task OnKeyPress(string key)
         {
-            static bool MatchesCommandList(string value, params string[] commands) => commands.Where(x => x == value).FirstOrDefault() != null;
+            static bool MatchesCommandList(string value, params string[] commands) => commands.FirstOrDefault(x => x == value) != null;
 
             if (key == "Enter" && !string.IsNullOrEmpty(SearchTerm))
             {
@@ -61,11 +61,6 @@ namespace TobyBlazor.Components
 
                 var result = searchValue switch
                 {
-                    //_ when MatchesCommandList(searchValue[0], "/t", "/test") =>
-                    //    CreateResult(SearchResultType.Command,
-                    //    () => {
-                    //        return new Message() { Value = "This is a test message...", Type = "alert-warning" };
-                    //    }),
                     _ when MatchesCommandList(searchValue[0], "/clear") => CreateResult(SearchResultType.Search, new List<Video>()),
                     _ when MatchesCommandList(searchValue[0], "/mg", "/manage") => CreateResult(SearchResultType.Manage, await videos.AllVideosAsync()),
                     _ when MatchesCommandList(searchValue[0], "/mgg", "/manage-groups") => CreateResult(SearchResultType.ManageGroups, await videos.AllGroupsAsync()),

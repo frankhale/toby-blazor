@@ -29,7 +29,7 @@ namespace TobyBlazor.Components
             await OnClose.InvokeAsync(null);
         }
 
-        private async void OnCloseButtonClick()
+        private async Task OnCloseButtonClick()
         {
             await CallClose();
         }

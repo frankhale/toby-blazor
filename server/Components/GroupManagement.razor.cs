@@ -69,7 +69,7 @@ namespace TobyBlazor.Components
                 }
             }
 
-            DeleteButtonDisabled = (GroupsToDelete.Count > 0) ? false : true;
+            DeleteButtonDisabled = GroupsToDelete.Count <= 0;
         }
 
         private async Task OnDeleteButtonClicked()
@@ -101,8 +101,7 @@ namespace TobyBlazor.Components
         private async Task OnAddButtonClicked()
         {
             await videos.AddGroupAsync(SearchTerm);
-            Groups = await videos.AllGroupsAsync();
-            // FIXME: This is not working, boo! Can't bind value and do on-input stupid fucking this doesn't work...!!!?!?!?!?!?!?!
+            Groups = await videos.AllGroupsAsync();            
             SearchTerm = string.Empty;
             await OnSearchTermChanged(new ChangeEventArgs() { Value = String.Empty });
         }

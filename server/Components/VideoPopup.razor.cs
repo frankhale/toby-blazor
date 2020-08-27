@@ -51,7 +51,7 @@ namespace TobyBlazor.Components
             return true;
         }
 
-        public async void OnModalCloseClicked()
+        public async Task OnModalCloseClicked()
         {
             await JSRuntime.InvokeVoidAsync("closeModal", "ytModal");
             await OnPopupClosed.InvokeAsync(EventCallback.Empty);

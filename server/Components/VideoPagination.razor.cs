@@ -1,11 +1,8 @@
-﻿using Google.Apis.YouTube.v3.Data;
-using Microsoft.AspNetCore.Components;
-using System;
+﻿using Microsoft.AspNetCore.Components;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TobyBlazor.Data;
-using TobyBlazor.Models;
 using TobyBlazor.Other;
 
 namespace TobyBlazor.Components
@@ -74,17 +71,11 @@ namespace TobyBlazor.Components
             }
 
             TogglePrevNextButtonsDisabled();
-
-            //Console.WriteLine("Total Videos = {0}", Videos.Count);
-            //Console.WriteLine("Total Pages = {0}", Pages.Count);
-            //Console.WriteLine("Total Page Indicies = {0}", PageIndices.Count);
-            //Console.WriteLine("Total Link Pages = {0}", Pages.Count / ChunkSize);
-            //Console.WriteLine("Total Links Left Over = {0}", Pages.Count % ChunkSize);
         }
 
         private void TogglePrevNextButtonsDisabled()
         {
-            PreviousButtonDisabled = CurrentPageLinkPage != 1 ? false : true;
+            PreviousButtonDisabled = CurrentPageLinkPage == 1;
             NextButtonDisabled = CurrentPageLinkPage >= PageIndices.Count;
         }
 

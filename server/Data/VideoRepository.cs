@@ -214,13 +214,10 @@ namespace TobyBlazor.Data
         {
             var foundVideo = await db.Videos.Where(x => x.YTId == ytid && x.Group != "Recently Played").FirstOrDefaultAsync();
 
-            if (foundVideo != null)
+            if (foundVideo != null && !string.IsNullOrEmpty(group))
             {
-                if (!String.IsNullOrEmpty(group))
-                {
-                    foundVideo.Group = group;
-                    await db.SaveChangesAsync();
-                }
+                foundVideo.Group = group;
+                await db.SaveChangesAsync();
             }
         }
         #endregion
@@ -306,7 +303,7 @@ namespace TobyBlazor.Data
             }
             else
             {
-                if (recentlyPlayed) 
+                if (recentlyPlayed)
                 {
                     preferences.CurrentRecentlyPlayedVideoPage = page;
                 }
