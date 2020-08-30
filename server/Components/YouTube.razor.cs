@@ -15,9 +15,9 @@ namespace TobyBlazor.Components
         private IJSRuntime JsRuntime { get; set; }
 
         private Timer _timer;
-        private bool playerReady = false;
-        private bool apiReady = false;
-        private bool playerCreated = false;
+        private bool playerReady;
+        private bool apiReady;
+        private bool playerCreated;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {

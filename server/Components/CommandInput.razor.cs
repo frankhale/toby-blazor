@@ -19,17 +19,17 @@ namespace TobyBlazor.Components
 
         private string SearchTerm { get; set; } = "";
 
-        private async Task<SearchResult> CreateResult(SearchResultType type, Func<Task<Message>> action)
+        private async static Task<SearchResult> CreateResult(SearchResultType type, Func<Task<Message>> action)
         {
             return await CreateResult<ThrowAwayDataItem>(type, null, null, action);
         }
 
-        private async Task<SearchResult> CreateResult<T>(SearchResultType type, List<T> data) where T : IDataItem
+        private async static Task<SearchResult> CreateResult<T>(SearchResultType type, List<T> data) where T : IDataItem
         {
             return await CreateResult(type, null, data, null);
         }
 
-        private async Task<SearchResult> CreateResult<T>(SearchResultType type, Message message, List<T> data, Func<Task<Message>> action) where T : IDataItem
+        private async static Task<SearchResult> CreateResult<T>(SearchResultType type, Message message, List<T> data, Func<Task<Message>> action) where T : IDataItem
         {
             var result = new SearchResult();
 

@@ -42,7 +42,7 @@ namespace TobyBlazor.Components
 
         private async Task Search(string searchTerm)
         {
-            if (!String.IsNullOrEmpty(searchTerm))
+            if (!string.IsNullOrEmpty(searchTerm))
             {
                 Groups = searchTerm switch
                 {
@@ -103,7 +103,7 @@ namespace TobyBlazor.Components
             await videos.AddGroupAsync(SearchTerm);
             Groups = await videos.AllGroupsAsync();            
             SearchTerm = string.Empty;
-            await OnSearchTermChanged(new ChangeEventArgs() { Value = String.Empty });
+            await OnSearchTermChanged(new ChangeEventArgs() { Value = string.Empty });
         }
 
         private async Task OnSearchButtonClicked()

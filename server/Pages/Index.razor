@@ -38,7 +38,7 @@ else
     <WindowTitle Title="Toby" />
 }
 
-@if (Result.Message != null && !String.IsNullOrEmpty(Result.Message.Value))
+@if (Result.Message != null && !string.IsNullOrEmpty(Result.Message.Value))
 {
     <Notification Message=@Result.Message.Value NotificationType=@Result.Message.Type OnClose=@OnNotificationClose />
 }

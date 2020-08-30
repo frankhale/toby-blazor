@@ -40,7 +40,7 @@ namespace TobyBlazor.Components
             }
         }
 
-        private string GetVideoThumbnail(string ytid)
+        private static string GetVideoThumbnail(string ytid)
         {
             return string.Format("https://i.ytimg.com/vi/{0}/default.jpg", ytid);
         }

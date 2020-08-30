@@ -89,9 +89,9 @@ namespace TobyBlazor.Data
 
         public async Task<List<Video>> SearchAsync(string term)
         {
-            if (String.IsNullOrEmpty(term.Trim())) return new List<Video>();
+            if (string.IsNullOrEmpty(term.Trim())) return new List<Video>();
 
-            static bool HasSubValue(string[] value) => value.Length > 1 && !String.IsNullOrEmpty(value[1]);
+            static bool HasSubValue(string[] value) => value.Length > 1 && !string.IsNullOrEmpty(value[1]);
             static bool MatchesCommandList(string value, params string[] commands) => (commands.FirstOrDefault(x => x == value) != null);
 
             var value = term.ToLower().Split(new char[] { ' ' }, 2);
@@ -148,7 +148,7 @@ namespace TobyBlazor.Data
         #region Add/Update - Videos/Groups
         public async Task AddVideoAsync(Video v, string group)
         {
-            if (String.IsNullOrEmpty(group))
+            if (string.IsNullOrEmpty(group))
             {
                 group = "Favorites";
             }
@@ -225,7 +225,7 @@ namespace TobyBlazor.Data
         #region Delete Videos/Groups
         public async Task DeleteVideoAsync(string ytid, string group)
         {
-            if (String.IsNullOrEmpty(ytid)) return;
+            if (string.IsNullOrEmpty(ytid)) return;
 
             var found = await db.Videos.Where(x => x.YTId == ytid && x.Group != "Recently Played").ToListAsync();
 
@@ -262,7 +262,7 @@ namespace TobyBlazor.Data
 
         public async Task DeleteGroupAsync(string name)
         {
-            if (String.IsNullOrEmpty(name)) return;
+            if (string.IsNullOrEmpty(name)) return;
 
             var found = await db.Groups.Where(x => x.Name == name).FirstOrDefaultAsync();
 

@@ -19,7 +19,7 @@ namespace TobyBlazor.Components
 
         private readonly IVideoRepository videos = new VideoRepository();
 
-        private bool AddedToFavorites = false;
+        private bool AddedToFavorites;
 
         protected override async Task OnInitializedAsync()
         {
