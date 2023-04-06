@@ -1,6 +1,6 @@
 ﻿namespace TobyBlazor.Models
 {
-    public interface IDataItem
-    {
-    }
+  public interface IDataItem
+  {
+  }
 }
