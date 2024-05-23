@@ -13,9 +13,9 @@ namespace TobyBlazor.Pages
     [Inject]
     private IJSRuntime JsRuntime { get; set; }
 
-    private readonly IVideoRepository videos = new VideoRepository();
-    private SearchResult Result { get; set; } = new SearchResult();
-    private List<Video> topFiveRecentlyPlayed = new List<Video>();
+    private readonly VideoRepository videos = new();
+    private SearchResult Result { get; set; } = new();
+    private List<Video> topFiveRecentlyPlayed = new();
     private Video SelectedVideo { get; set; }
 
     private bool RecentlyPlayed { get; set; }

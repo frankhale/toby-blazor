@@ -18,7 +18,7 @@ namespace TobyBlazor.Components
     [Parameter]
     public bool RecentlyPlayed { get; set; }
 
-    private readonly IVideoRepository videos = new VideoRepository();
+    private readonly VideoRepository videos = new();
     private const int ChunkSize = 10;
     private List<List<Models.Video>> Pages { get; set; }
     private List<List<int>> PageIndices { get; set; }
@@ -79,33 +79,33 @@ namespace TobyBlazor.Components
       NextButtonDisabled = CurrentPageLinkPage >= PageIndices.Count;
     }
 
-    private void OnPageButtonClick(int page)
+    private async Task OnPageButtonClick(int page)
     {
-      videos.SetCurrentVideoPage(RecentlyPlayed, page, CurrentPageLinkPage);
+      await videos.SetCurrentVideoPage(RecentlyPlayed, page, CurrentPageLinkPage);
 
       CurrentPage = page;
     }
 
-    private void OnPreviousButtonClick()
+    private async Task OnPreviousButtonClick()
     {
       if (CurrentPageLinkPage > 1)
       {
         CurrentPageLinkPage -= 1;
       }
 
-      videos.SetCurrentVideoPage(RecentlyPlayed, CurrentPage, CurrentPageLinkPage);
+      await videos.SetCurrentVideoPage(RecentlyPlayed, CurrentPage, CurrentPageLinkPage);
 
       TogglePrevNextButtonsDisabled();
     }
 
-    private void OnNextButtonClick()
+    private async Task OnNextButtonClick()
     {
       if (CurrentPageLinkPage < PageIndices.Count)
       {
         CurrentPageLinkPage += 1;
       }
 
-      videos.SetCurrentVideoPage(RecentlyPlayed, CurrentPage, CurrentPageLinkPage);
+      await videos.SetCurrentVideoPage(RecentlyPlayed, CurrentPage, CurrentPageLinkPage);
 
       TogglePrevNextButtonsDisabled();
     }

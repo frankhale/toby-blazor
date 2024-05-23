@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using System;
 using System.Threading.Tasks;
 using TobyBlazor.Data;
 using TobyBlazor.Models;
 
 namespace TobyBlazor.Components
 {
-  public partial class VideoPopup : ComponentBase
+  public partial class VideoPopup : ComponentBase, IDisposable
   {
     [Inject]
     IJSRuntime JSRuntime { get; set; }
@@ -17,12 +18,15 @@ namespace TobyBlazor.Components
     [Parameter]
     public EventCallback OnPopupClosed { get; set; }
 
-    private readonly IVideoRepository videos = new VideoRepository();
+    private readonly VideoRepository videos = new();
 
     private bool AddedToFavorites;
 
+    private DotNetObjectReference<VideoPopup> dotNetObjectReference;
+
     protected override async Task OnInitializedAsync()
     {
+      dotNetObjectReference = DotNetObjectReference.Create(this);
       AddedToFavorites = await IsAddedToFavorites(SelectedVideo);
     }
 
@@ -36,7 +40,7 @@ namespace TobyBlazor.Components
 
     private async Task OpenModal()
     {
-      await JSRuntime.InvokeVoidAsync("openModal", "ytModal");
+      await JSRuntime.InvokeVoidAsync("openModal", "ytModal", dotNetObjectReference);
     }
 
     public async Task<bool> IsAddedToFavorites(Video video)
@@ -51,6 +55,7 @@ namespace TobyBlazor.Components
       return true;
     }
 
+    [JSInvokable("OnModalCloseClicked")]
     public async Task OnModalCloseClicked()
     {
       await JSRuntime.InvokeVoidAsync("closeModal", "ytModal");
@@ -70,5 +75,7 @@ namespace TobyBlazor.Components
         await videos.DeleteVideoAsync(SelectedVideo.YTId, "Favorites");
       }
     }
+
+    public void Dispose() => dotNetObjectReference?.Dispose();
   }
 }

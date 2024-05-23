@@ -68,6 +68,7 @@
             document.title = title;
         }
 
+        window.dotNetObjectRef = null;
         window.ytAPIReady = false;
         window.playerReady = false;
         window.player = null;
@@ -92,6 +93,7 @@
                 },
                 events: {
                     'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
                 }
             });
         }
@@ -99,7 +101,15 @@
         window.playVideo = function (videoId) {
             if (window.player) {
                 window.player.setVolume(30);
-                window.player.loadVideoById(videoId);
+                window.player.loadVideoById(videoId);  
+            }
+        }
+
+        window.onPlayerStateChange = function (event) {
+            if (event.data === YT.PlayerState.ENDED) {
+                if (window.dotNetObjectRef) {
+                    window.dotNetObjectRef.invokeMethodAsync('OnModalCloseClicked');
+                }
             }
         }
 
@@ -133,7 +143,8 @@
             toggleMainUI();
         }
 
-        window.openModal = function (id) {
+        window.openModal = function (id, dotNetObjectRef) {
+            window.dotNetObjectRef = dotNetObjectRef;
             $("#" + id).modal({ backdrop: "static", keyboard: false });
             $("body").css("overflow-y", "hidden");
             toggleMainUI();
@@ -147,7 +158,6 @@
             $("#" + id).on("hidden.bs.modal", function () {
                 if (player) {
                     player.stopVideo();
-                    
                 }
             });
         }
@@ -155,7 +165,6 @@
         window.toggleMainUI = function () {
             $("#main-ui").toggle();
         }
-
     </script>
 
     <app>

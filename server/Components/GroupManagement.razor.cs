@@ -9,13 +9,13 @@ namespace TobyBlazor.Components
 {
   public partial class GroupManagement : ComponentBase
   {
-    private readonly IVideoRepository videos = new VideoRepository();
+    private readonly VideoRepository videos = new();
     private string SearchTerm { get; set; } = string.Empty;
     private bool DeleteButtonDisabled { get; set; } = true;
     private bool AddButtonDisabled { get; set; } = true;
     private bool SearchButtonDisabled { get; set; } = true;
-    private List<Group> Groups { get; set; } = new List<Group>();
-    private List<string> GroupsToDelete = new List<string>();
+    private List<Group> Groups { get; set; } = new();
+    private List<string> GroupsToDelete = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -46,7 +46,7 @@ namespace TobyBlazor.Components
       {
         Groups = searchTerm switch
         {
-          _ when searchTerm.ToLower().StartsWith("/all") => await videos.AllGroupsAsync(),
+          _ when searchTerm.StartsWith("/all", StringComparison.InvariantCultureIgnoreCase) => await videos.AllGroupsAsync(),
           _ => await videos.FindGroupAsync(searchTerm)
         };
       }
@@ -90,7 +90,7 @@ namespace TobyBlazor.Components
         if (deleteGroups.Count > 0)
         {
           await videos.DeleteGroupRangeAsync(deleteGroups);
-          GroupsToDelete = new List<string>();
+          GroupsToDelete = new();
           DeleteButtonDisabled = true;
 
           Groups = await videos.AllGroupsAsync();
@@ -103,7 +103,7 @@ namespace TobyBlazor.Components
       await videos.AddGroupAsync(SearchTerm);
       Groups = await videos.AllGroupsAsync();
       SearchTerm = string.Empty;
-      await OnSearchTermChanged(new ChangeEventArgs() { Value = string.Empty });
+      await OnSearchTermChanged(new() { Value = string.Empty });
     }
 
     private async Task OnSearchButtonClicked()

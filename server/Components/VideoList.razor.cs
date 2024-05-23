@@ -17,7 +17,7 @@ namespace TobyBlazor.Components
     [Parameter]
     public EventCallback<Video> OnSelectedVideo { get; set; }
 
-    private readonly IVideoRepository videos = new VideoRepository();
+    private readonly VideoRepository videos = new();
     private Video SelectedVideo { get; set; }
 
     protected override void OnAfterRender(bool firstRender)

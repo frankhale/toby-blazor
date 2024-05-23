@@ -15,7 +15,7 @@ namespace TobyBlazor.Components
 
     public class ThrowAwayDataItem : IDataItem { }
 
-    private readonly IVideoRepository videos = new VideoRepository();
+    private readonly VideoRepository videos = new();
 
     private string SearchTerm { get; set; } = "";
 

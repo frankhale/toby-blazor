@@ -16,7 +16,7 @@ namespace TobyBlazor.Components
     [Parameter]
     public bool RecentlyPlayed { get; set; }
 
-    private readonly IVideoRepository videos = new VideoRepository();
+    private readonly VideoRepository videos = new();
     private string SearchTerm { get; set; } = string.Empty;
     private bool DeleteButtonDisabled { get; set; } = true;
     private bool ApplyButtonDisabled { get; set; } = true;
@@ -51,7 +51,7 @@ namespace TobyBlazor.Components
       {
         Videos = searchTerm switch
         {
-          _ when searchTerm.ToLower().StartsWith("/all") => await videos.AllVideosAsync(),
+          _ when searchTerm.StartsWith("/all", StringComparison.InvariantCultureIgnoreCase) => await videos.AllVideosAsync(),
           _ => await videos.FindVideoAsync(searchTerm)
         };
       }
@@ -88,10 +88,7 @@ namespace TobyBlazor.Components
       }
       else
       {
-        if (VideosToDelete.Contains(ytid))
-        {
-          VideosToDelete.Remove(ytid);
-        }
+        VideosToDelete.Remove(ytid);
       }
 
       DeleteButtonDisabled = VideosToDelete.Count <= 0;
