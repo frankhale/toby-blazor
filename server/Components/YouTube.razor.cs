@@ -23,7 +23,7 @@ namespace TobyBlazor.Components
     {
       if (firstRender)
       {
-        
+
         await JsRuntime.InvokeVoidAsync("initializeYouTubePlayer");
 
         // Periodically check to see if the api is ready and the player is created
@@ -41,8 +41,17 @@ namespace TobyBlazor.Components
 
           if (playerReady)
           {
-            await JsRuntime.InvokeAsync<string>("playVideo", VideoId);
-            _timer.Dispose();
+            try
+            {
+              await JsRuntime.InvokeAsync<string>("playVideo", VideoId);
+              _timer.Dispose();
+              _timer = null;
+            }
+            catch
+            {
+              _timer.Dispose();
+              _timer = null;
+            }
           }
         }, null, TimeSpan.Zero, TimeSpan.FromMilliseconds(500));
       }
