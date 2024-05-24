@@ -9,7 +9,7 @@ function createWindow() {
     icon: __dirname + "/toby.png",
   });
   win.removeMenu();
-  win.loadURL("http://localhost:5001");
+  win.loadURL("https://localhost:5001");
   //win.webContents.openDevTools();
 
   win.on("closed", () => {
