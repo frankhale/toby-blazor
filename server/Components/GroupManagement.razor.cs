@@ -9,22 +9,22 @@ namespace TobyBlazor.Components
 {
   public partial class GroupManagement : ComponentBase
   {
-    private readonly VideoRepository videos = new();
+    private readonly VideoRepository _videos = new();
     private string SearchTerm { get; set; } = string.Empty;
     private bool DeleteButtonDisabled { get; set; } = true;
     private bool AddButtonDisabled { get; set; } = true;
     private bool SearchButtonDisabled { get; set; } = true;
-    private List<Group> Groups { get; set; } = new();
-    private List<string> GroupsToDelete = new();
+    private List<Group> Groups { get; set; } = [];
+    private List<string> _groupsToDelete = [];
 
     protected override async Task OnInitializedAsync()
     {
-      Groups = await videos.AllGroupsAsync();
+      Groups = await _videos.AllGroupsAsync();
     }
 
     private async Task OnSearchTermChanged(ChangeEventArgs e)
     {
-      SearchTerm = e.Value.ToString();
+      SearchTerm = e.Value?.ToString();
 
       if (!string.IsNullOrEmpty(SearchTerm))
       {
@@ -36,7 +36,7 @@ namespace TobyBlazor.Components
         AddButtonDisabled = true;
         SearchButtonDisabled = true;
 
-        Groups = await videos.AllGroupsAsync();
+        Groups = await _videos.AllGroupsAsync();
       }
     }
 
@@ -46,8 +46,8 @@ namespace TobyBlazor.Components
       {
         Groups = searchTerm switch
         {
-          _ when searchTerm.StartsWith("/all", StringComparison.InvariantCultureIgnoreCase) => await videos.AllGroupsAsync(),
-          _ => await videos.FindGroupAsync(searchTerm)
+          _ when searchTerm.StartsWith("/all", StringComparison.InvariantCultureIgnoreCase) => await _videos.AllGroupsAsync(),
+          _ => await _videos.FindGroupAsync(searchTerm)
         };
       }
     }
@@ -56,31 +56,31 @@ namespace TobyBlazor.Components
     {
       if ((bool)checkedValue)
       {
-        if (!GroupsToDelete.Contains(name))
+        if (!_groupsToDelete.Contains(name))
         {
-          GroupsToDelete.Add(name);
+          _groupsToDelete.Add(name);
         }
       }
       else
       {
-        if (GroupsToDelete.Contains(name))
+        if (_groupsToDelete.Contains(name))
         {
-          GroupsToDelete.Remove(name);
+          _groupsToDelete.Remove(name);
         }
       }
 
-      DeleteButtonDisabled = GroupsToDelete.Count <= 0;
+      DeleteButtonDisabled = _groupsToDelete.Count <= 0;
     }
 
     private async Task OnDeleteButtonClicked()
     {
-      if (GroupsToDelete.Count > 0)
+      if (_groupsToDelete.Count > 0)
       {
         var deleteGroups = new List<Group>();
 
-        GroupsToDelete.ForEach(async x =>
+        _groupsToDelete.ForEach(async x =>
         {
-          var foundGroup = await videos.FindGroupByNameAsync(x);
+          var foundGroup = await _videos.FindGroupByNameAsync(x);
           if (foundGroup != null)
           {
             deleteGroups.Add(foundGroup);
@@ -89,21 +89,21 @@ namespace TobyBlazor.Components
 
         if (deleteGroups.Count > 0)
         {
-          await videos.DeleteGroupRangeAsync(deleteGroups);
-          GroupsToDelete = new();
+          await _videos.DeleteGroupRangeAsync(deleteGroups);
+          _groupsToDelete = [];
           DeleteButtonDisabled = true;
 
-          Groups = await videos.AllGroupsAsync();
+          Groups = await _videos.AllGroupsAsync();
         }
       }
     }
 
     private async Task OnAddButtonClicked()
     {
-      await videos.AddGroupAsync(SearchTerm);
-      Groups = await videos.AllGroupsAsync();
+      await _videos.AddGroupAsync(SearchTerm);
+      Groups = await _videos.AllGroupsAsync();
       SearchTerm = string.Empty;
-      await OnSearchTermChanged(new() { Value = string.Empty });
+      await OnSearchTermChanged(new ChangeEventArgs { Value = string.Empty });
     }
 
     private async Task OnSearchButtonClicked()

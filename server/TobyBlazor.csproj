@@ -3,7 +3,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <AssemblyName>TobyBlazor</AssemblyName>
     <RootNamespace>TobyBlazor</RootNamespace>
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>latestmajor</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Google.Apis.YouTube.v3" Version="1.68.0.3421" />

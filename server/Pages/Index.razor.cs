@@ -13,16 +13,16 @@ namespace TobyBlazor.Pages
     [Inject]
     private IJSRuntime JsRuntime { get; set; }
 
-    private readonly VideoRepository videos = new();
+    private readonly VideoRepository _videos = new();
     private SearchResult Result { get; set; } = new();
-    private List<Video> topFiveRecentlyPlayed = new();
+    private List<Video> _topFiveRecentlyPlayed = [];
     private Video SelectedVideo { get; set; }
 
     private bool RecentlyPlayed { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-      topFiveRecentlyPlayed = await videos.GetRecentlyPlayedVideosAsync(5);
+      _topFiveRecentlyPlayed = await _videos.GetRecentlyPlayedVideosAsync(5);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -33,22 +33,14 @@ namespace TobyBlazor.Pages
       }
     }
 
-    public void OnSearchResults(SearchResult result)
+    private void OnSearchResults(SearchResult result)
     {
       Result = result;
-
-      if (result.Videos.Any(x => x.Group == "Recently Played"))
-      {
-        RecentlyPlayed = true;
-      }
-      else
-      {
-        RecentlyPlayed = false;
-      }
+      RecentlyPlayed = result.Videos.Any(x => x.Group == "Recently Played");
       this.StateHasChanged();
     }
 
-    public void OnNotificationClose()
+    private void OnNotificationClose()
     {
       if (Result != null)
       {
@@ -56,20 +48,20 @@ namespace TobyBlazor.Pages
       }
     }
 
-    public async Task OnSelectedVideo(Video video)
+    private async Task OnSelectedVideo(Video video)
     {
-      topFiveRecentlyPlayed = await videos.GetRecentlyPlayedVideosAsync(5);
+      _topFiveRecentlyPlayed = await _videos.GetRecentlyPlayedVideosAsync(5);
       SelectedVideo = video;
     }
 
-    public void OnVideoDismissed()
+    private void OnVideoDismissed()
     {
       SelectedVideo = null;
     }
 
-    public async Task OnDeleteVideo()
+    private async Task OnDeleteVideo()
     {
-      topFiveRecentlyPlayed = await videos.GetRecentlyPlayedVideosAsync(5);
+      _topFiveRecentlyPlayed = await _videos.GetRecentlyPlayedVideosAsync(5);
     }
   }
 }

@@ -4,34 +4,35 @@
 @using TobyBlazor.Models
 
 <div id="main-ui">
-    <CommandInput OnSearch=@OnSearchResults />
+    <CommandInput OnSearch="@OnSearchResults" />
     
     <div style="padding-bottom: 15px;">
-        <VideoList Videos=@topFiveRecentlyPlayed RecentlyPlayed=true OnSelectedVideo=@OnSelectedVideo />
+        <VideoList Videos="@_topFiveRecentlyPlayed" RecentlyPlayed="true" OnSelectedVideo="@OnSelectedVideo" />
     </div>
 
-    @if (Result.Type == SearchResultType.Manage || Result.Type == SearchResultType.ManageRecentlyPlayed)
+    @switch (Result.Type)
     {
-        <VideoManagement Videos=@Result.Videos OnDeleteVideo=@OnDeleteVideo RecentlyPlayed=@(Result.Type == SearchResultType.ManageRecentlyPlayed ? true : false) />
-    }
-    else if (Result.Type == SearchResultType.ManageGroups)
-    {
-        <GroupManagement />
-    }
-    else if (Result.Type == SearchResultType.Search)
-    {
-        <VideoPagination RecentlyPlayed=@RecentlyPlayed Videos=@Result.Videos>
-            <Content>
-                <VideoList Videos=@context OnSelectedVideo=@OnSelectedVideo />
-            </Content>
-        </VideoPagination>
+        case SearchResultType.Manage:
+        case SearchResultType.ManageRecentlyPlayed:
+            <VideoManagement Videos="@Result.Videos" OnDeleteVideo=@OnDeleteVideo RecentlyPlayed=@(Result.Type == SearchResultType.ManageRecentlyPlayed) />
+            break;
+        case SearchResultType.ManageGroups:
+            <GroupManagement />
+            break;
+        case SearchResultType.Search:
+            <VideoPagination RecentlyPlayed=@RecentlyPlayed Videos=@Result.Videos>
+                <Content>
+                    <VideoList Videos="@context" OnSelectedVideo="@OnSelectedVideo" />
+                </Content>
+            </VideoPagination>
+            break;
     }
 </div>
 
 @if (SelectedVideo != null && !string.IsNullOrEmpty(SelectedVideo.YTId))
 {
-    <WindowTitle Title=@WebUtility.HtmlDecode(SelectedVideo.Title) />
-    <VideoPopup SelectedVideo=@SelectedVideo OnPopupClosed=@OnVideoDismissed />
+    <WindowTitle Title="@WebUtility.HtmlDecode(SelectedVideo.Title)" />
+    <VideoPopup SelectedVideo="@SelectedVideo" OnPopupClosed="@OnVideoDismissed" />
 }
 else
 {
@@ -40,5 +41,5 @@ else
 
 @if (Result.Message != null && !string.IsNullOrEmpty(Result.Message.Value))
 {
-    <Notification Message=@Result.Message.Value NotificationType=@Result.Message.Type OnClose=@OnNotificationClose />
+    <Notification Message="@Result.Message.Value" NotificationType="@Result.Message.Type" OnClose="@OnNotificationClose" />
 }

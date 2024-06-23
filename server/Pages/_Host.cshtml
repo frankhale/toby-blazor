@@ -2,186 +2,176 @@
 @namespace TobyBlazor.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
-    Layout = null;
+  Layout = null;
 }
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Toby</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Toby</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <base href="~/" />
-    <link rel="stylesheet" href="css/bootstrap/cyborg-bootstrap.min.css" />
+  <base href="~/" />
+  <link rel="stylesheet" href="css/bootstrap/cyborg-bootstrap.min.css" />
 
-    <link href="css/site.css" rel="stylesheet" />
+  <link href="css/site.css" rel="stylesheet" />
 
-    <script src="js/jquery-3.5.1.slim.min.js"></script>
-    <script src="js/popper.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+  <script src="js/jquery-3.5.1.slim.min.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
 
-    <style>
-        @@media (min-width: 768px) {
-            .main > div {
-                padding-left: 1rem !important;
-                padding-right: 1rem !important;
-            }
-        }
+  <style>
+    @@media (min-width: 768px) {
+      .main > div {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+      }
+    }
 
-        .modal {
-            overflow: hidden !important;
-            padding-right: 22px !important;
-        }
+    .modal {
+      overflow: hidden !important;
+      padding-right: 22px !important;
+    }
 
-        @@media (min-width: 576px) {
-            .modal-dialog {
-                margin: 10px !important;
-            }
-        }
+    @@media (min-width: 576px) {
+      .modal-dialog {
+        margin: 10px !important;
+      }
+    }
 
-        .modal-tall .modal-dialog {
-            height: 100%;
-        }
+    .modal-tall .modal-dialog {
+      height: 100%;
+    }
 
-        .modal-tall .modal-content {
-            height: 97%;
-        }
+    .modal-tall .modal-content {
+      height: 97%;
+    }
 
-        .modal-open {
-            overflow: auto;
-            padding-right: 0 !important;
-        }
+    .modal-open {
+      overflow: auto;
+      padding-right: 0 !important;
+    }
 
-        /* Credit: https://codepen.io/leenawat/pen/ORPbqE */
-        .alert-bottom {
-            position: fixed;
-            bottom: 5px;
-            left: 2%;
-            width: 96%;
-        }
-    </style>
+    /* Credit: https://codepen.io/leenawat/pen/ORPbqE */
+    .alert-bottom {
+      position: fixed;
+      bottom: 5px;
+      left: 2%;
+      width: 96%;
+    }
+  </style>
 </head>
 <body>
-    <script>
-        window.setTitle = function (title) {
-            document.title = title;
-        }
+<script>
+  window.dotNetObjectRef = null;
+  window.ytAPIReady = false;
+  window.playerReady = false;
+  window.player = null;
+  
+  var tag = document.createElement('script');
+  tag.src = "https://www.youtube.com/iframe_api";
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-        window.dotNetObjectRef = null;
-        window.ytAPIReady = false;
-        window.playerReady = false;
-        window.player = null;
+  window.setTitle = function (title) {
+    document.title = title;
+  }
 
-        window.initializeYouTubePlayer = function () {
-            window.player = null;
+  window.playVideo = function (videoId) {
+    window.player = new YT.Player("player", {
+      videoId: videoId,
+      width: "100%",
+      height: "100%",
+      playerVars: {
+        'autoplay': 1,
+        'iv_load_policy': 3
+      },
+      events: {
+        'onReady': onPlayerReady,
+        'onStateChange': onPlayerStateChange
+      }
+    });
+  }
 
-            var tag = document.createElement('script');
-            tag.src = 'https://www.youtube.com/iframe_api';
-            var firstScriptTag = document.getElementsByTagName('script')[0];
-            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-        }
+  window.onPlayerStateChange = function (event) {
+    if (event.data === YT.PlayerState.ENDED) {
+      if (window.dotNetObjectRef) {
+        window.dotNetObjectRef.invokeMethodAsync('OnModalCloseClicked');
+      }
+    }
+  }
 
-        window.createPlayer = function () {
-            window.player = new YT.Player("player", {
-                videoId: '',
-                width: "100%",
-                height: "100%",
-                playerVars: {
-                    autoplay: 1,
-                    iv_load_policy: 3
-                },
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
-                }
-            });
-        }
+  window.onYouTubeIframeAPIReady = function () {
+    window.ytAPIReady = true;
+  }
 
-        window.playVideo = function (videoId) {
-            if (window.player) {
-                window.player.setVolume(30);
-                window.player.loadVideoById(videoId);  
-            }
-        }
+  window.onPlayerReady = function (event) {
+    window.playerReady = true;
+  }
 
-        window.onPlayerStateChange = function (event) {
-            if (event.data === YT.PlayerState.ENDED) {
-                if (window.dotNetObjectRef) {
-                    window.dotNetObjectRef.invokeMethodAsync('OnModalCloseClicked');
-                }
-            }
-        }
+  window.checkAPIReady = function () {
+    console.log("checking if API is ready");
+    if (window.ytAPIReady) {
+      console.log("YouTube API is ready");
+      return true;
+    }
 
-        window.onYouTubeIframeAPIReady = function () {
-            window.ytAPIReady = true;
-        }
+    return false;
+  }
 
-        window.onPlayerReady = function (event) {
-            window.playerReady = true;
-        }
+  window.checkPlayer = function () {
+    if (player && playerReady) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
-        window.checkAPIReady = function () {
-            if (window.ytAPIReady) {
-                return true;
-            }
+  window.closeModal = function (id) {
+    $("#" + id).modal("hide");
+    $("body").css("overflow-y", "auto");
+    toggleMainUI();      
+    if (player) {        
+      player.stopVideo();
+    }
+  }
 
-            return false;
-        }
+  window.openModal = function (id, dotNetObjectRef) {
+    window.dotNetObjectRef = dotNetObjectRef;
+    $("#" + id).modal({ backdrop: "static", keyboard: false });
+    $("body").css("overflow-y", "hidden");
+    toggleMainUI();
+  }
 
-        window.checkPlayer = function () {
-            if (player && playerReady) {
-                return true;
-            } else {
-                return false;
-            }
-        }
+  window.setModalCloseStopVideo = function (id) {
+    $("#" + id).on("hidden.bs.modal", function () {
+      if (player) {
+        player.stopVideo();
+      }
+    });
+  }
 
-        window.closeModal = function (id) {
-            $("#" + id).modal("hide");
-            $("body").css("overflow-y", "auto");
-            toggleMainUI();
-        }
+  window.toggleMainUI = function () {
+    $("#main-ui").toggle();
+  }
+</script>
 
-        window.openModal = function (id, dotNetObjectRef) {
-            window.dotNetObjectRef = dotNetObjectRef;
-            $("#" + id).modal({ backdrop: "static", keyboard: false });
-            $("body").css("overflow-y", "hidden");
-            toggleMainUI();
+  <app>
+    <component type="typeof(App)" render-mode="ServerPrerendered" />
+  </app>
 
-            if (player) {
-                player.playVideo();                
-            }
-        }
+  <div id="blazor-error-ui">
+    <environment include="Staging,Production">
+      An error has occurred. This application may no longer respond until reloaded.
+    </environment>
+    <environment include="Development">
+      An unhandled exception has occurred. See browser dev tools for details.
+    </environment>
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+  </div>
 
-        window.setModalCloseStopVideo = function (id) {
-            $("#" + id).on("hidden.bs.modal", function () {
-                if (player) {
-                    player.stopVideo();
-                }
-            });
-        }
-
-        window.toggleMainUI = function () {
-            $("#main-ui").toggle();
-        }
-    </script>
-
-    <app>
-        <component type="typeof(App)" render-mode="ServerPrerendered" />
-    </app>
-
-    <div id="blazor-error-ui">
-        <environment include="Staging,Production">
-            An error has occurred. This application may no longer respond until reloaded.
-        </environment>
-        <environment include="Development">
-            An unhandled exception has occurred. See browser dev tools for details.
-        </environment>
-        <a href="" class="reload">Reload</a>
-        <a class="dismiss">🗙</a>
-    </div>
-
-    <script src="_framework/blazor.server.js"></script>
+  <script src="_framework/blazor.server.js"></script>
 </body>
 </html>

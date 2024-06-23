@@ -7,8 +7,8 @@
                 @if (string.IsNullOrEmpty(SelectedVideo.Group) || SelectedVideo.Group == "Recently Played" || SelectedVideo.Group == "Favorites")
                 {
                     <div style="margin-right: 25px;" class="btn-group-toggle" data-toggle="buttons" @onclick=@OnAddToFavoritesButtonToggle>
-                        <label class="btn btn-secondary @(AddedToFavorites ? "active": "")">
-                            @if (AddedToFavorites)
+                        <label class="btn btn-secondary @(_addedToFavorites ? "active": "")">
+                            @if (_addedToFavorites)
                             {
                                 <Icon Path="css/bootstrap/icons/star-fill.svg" Title="Favorite" Invert=true />
                             }

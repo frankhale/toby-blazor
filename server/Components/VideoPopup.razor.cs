@@ -9,8 +9,7 @@ namespace TobyBlazor.Components
 {
   public partial class VideoPopup : ComponentBase, IDisposable
   {
-    [Inject]
-    IJSRuntime JSRuntime { get; set; }
+    [Inject] private IJSRuntime JsRuntime { get; set; }
 
     [Parameter]
     public Video SelectedVideo { get; set; }
@@ -18,16 +17,14 @@ namespace TobyBlazor.Components
     [Parameter]
     public EventCallback OnPopupClosed { get; set; }
 
-    private readonly VideoRepository videos = new();
-
-    private bool AddedToFavorites;
-
-    private DotNetObjectReference<VideoPopup> dotNetObjectReference;
+    private readonly VideoRepository _videos = new();
+    private bool _addedToFavorites;
+    private DotNetObjectReference<VideoPopup> _dotNetObjectReference;
 
     protected override async Task OnInitializedAsync()
     {
-      dotNetObjectReference = DotNetObjectReference.Create(this);
-      AddedToFavorites = await IsAddedToFavorites(SelectedVideo);
+      _dotNetObjectReference = DotNetObjectReference.Create(this);
+      _addedToFavorites = await IsAddedToFavorites(SelectedVideo);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -40,42 +37,42 @@ namespace TobyBlazor.Components
 
     private async Task OpenModal()
     {
-      await JSRuntime.InvokeVoidAsync("openModal", "ytModal", dotNetObjectReference);
+      await JsRuntime.InvokeVoidAsync("openModal", "ytModal", _dotNetObjectReference);
     }
 
     public async Task<bool> IsAddedToFavorites(Video video)
     {
-      var found = await videos.FindVideoByYTIdAsync(video.YTId, "Favorites");
+      var found = await _videos.FindVideoByYTIdAsync(video.YTId, "Favorites");
 
-      if (found == null || found.Group != "Favorites")
-      {
-        return false;
-      }
-
-      return true;
+      return found is { Group: "Favorites" };
     }
 
     [JSInvokable("OnModalCloseClicked")]
     public async Task OnModalCloseClicked()
     {
-      await JSRuntime.InvokeVoidAsync("closeModal", "ytModal");
+      await JsRuntime.InvokeVoidAsync("closeModal", "ytModal");
+      await JsRuntime.InvokeVoidAsync("setModalCloseStopVideo", "ytModal");
       await OnPopupClosed.InvokeAsync(EventCallback.Empty);
     }
 
     public async Task OnAddToFavoritesButtonToggle()
     {
-      if (!AddedToFavorites)
+      if (!_addedToFavorites)
       {
-        AddedToFavorites = true;
-        await videos.AddVideoAsync(SelectedVideo, "Favorites");
+        _addedToFavorites = true;
+        await _videos.AddVideoAsync(SelectedVideo, "Favorites");
       }
       else
       {
-        AddedToFavorites = false;
-        await videos.DeleteVideoAsync(SelectedVideo.YTId, "Favorites");
+        _addedToFavorites = false;
+        await _videos.DeleteVideoAsync(SelectedVideo.YTId, "Favorites");
       }
     }
 
-    public void Dispose() => dotNetObjectReference?.Dispose();
+    public void Dispose()
+    {
+      _dotNetObjectReference?.Dispose();
+      GC.SuppressFinalize(this);
+    }
   }
 }

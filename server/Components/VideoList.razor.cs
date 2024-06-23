@@ -17,7 +17,7 @@ namespace TobyBlazor.Components
     [Parameter]
     public EventCallback<Video> OnSelectedVideo { get; set; }
 
-    private readonly VideoRepository videos = new();
+    private readonly VideoRepository _videos = new();
     private Video SelectedVideo { get; set; }
 
     protected override void OnAfterRender(bool firstRender)
@@ -31,7 +31,7 @@ namespace TobyBlazor.Components
     private async Task VideoSelectedAsync(Video video)
     {
       SelectedVideo = video;
-      await videos.AddVideoToRecentlyPlayedAsync(video);
+      await _videos.AddVideoToRecentlyPlayedAsync(video);
       await OnSelectedVideo.InvokeAsync(video);
     }
   }

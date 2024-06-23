@@ -28,7 +28,7 @@ namespace TobyBlazor.Components
     private bool PreviousButtonDisabled { get; set; }
     private bool NextButtonDisabled { get; set; }
 
-    protected async override Task OnParametersSetAsync()
+    protected override async Task OnParametersSetAsync()
     {
       await base.OnParametersSetAsync();
       await InitializePages(true);
@@ -37,8 +37,8 @@ namespace TobyBlazor.Components
     private async Task InitializePages(bool resetCurrentPage = false)
     {
       var preferences = await videos.GetCurrentPreferences();
-      int preferredPage = 1;
-      int preferredLinkPage = 1;
+      var preferredPage = 1;
+      var preferredLinkPage = 1;
 
       Pages = Videos.ChunkBy(ChunkSize);
       PageIndices = Enumerable.Range(1, Pages.Count).ToList().ChunkBy(ChunkSize);
@@ -110,6 +110,6 @@ namespace TobyBlazor.Components
       TogglePrevNextButtonsDisabled();
     }
 
-    public void OnNotificationClose() => Message = string.Empty;
+    private void OnNotificationClose() => Message = string.Empty;
   }
 }
