@@ -8,7 +8,7 @@ using TobyBlazor.Models;
 
 namespace TobyBlazor.Components
 {
-  public abstract partial class CommandInput : ComponentBase
+  public partial class CommandInput : ComponentBase
   {
     [Parameter]
     public EventCallback<SearchResult> OnSearch { get; set; }
