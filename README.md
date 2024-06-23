@@ -10,7 +10,8 @@ Blazor. This project is using the server-side hosting model.
 ## Usage
 
 NOTE: Currently the database shipping in the repo is a slightly modified one from
-[Toby](https://github.com/frankhale/toby). It's pre-populated with videos I like. Use the command `/all` to list them or `/manage` to delete them all. Or
+[Toby](https://github.com/frankhale/toby). It's pre-populated with videos I like. Use the command `/all` to list them
+or `/manage` to delete them all. Or
 if using Visual Studio you can just delete the included database and run the
 Entity Framework migration to create a new empty database.
 
@@ -62,7 +63,9 @@ The Recently Played videos are limited to 30 videos.
 ## Folder Layout
 
 - server: Blazor server-side project
-- client: Electron and NW.js drivers
+- electron: Run Toby inside Electron
+    - Run Toby then start Electron (this will be changed in the future so that all you need to do is run Electron and
+      it'll start Toby up)
 
 ## Author(s)
 
