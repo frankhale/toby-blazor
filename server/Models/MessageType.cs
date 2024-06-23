@@ -1,8 +1,7 @@
-﻿namespace TobyBlazor.Models
+﻿namespace TobyBlazor.Models;
+
+public class Message
 {
-  public class Message
-  {
-    public string Value { get; set; }
-    public string Type { get; set; }
-  }
+    public string Value { get; init; }
+    public string Type { get; init; }
 }

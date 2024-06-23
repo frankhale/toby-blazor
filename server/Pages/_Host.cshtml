@@ -2,26 +2,26 @@
 @namespace TobyBlazor.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
-  Layout = null;
+    Layout = null;
 }
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Toby</title>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Toby</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-  <base href="~/" />
-  <link rel="stylesheet" href="css/bootstrap/cyborg-bootstrap.min.css" />
+    <base href="~/"/>
+    <link rel="stylesheet" href="css/bootstrap/cyborg-bootstrap.min.css"/>
 
-  <link href="css/site.css" rel="stylesheet" />
+    <link href="css/site.css" rel="stylesheet"/>
 
-  <script src="js/jquery-3.5.1.slim.min.js"></script>
-  <script src="js/popper.min.js"></script>
-  <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery-3.5.1.slim.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
 
-  <style>
+    <style>
     @@media (min-width: 768px) {
       .main > div {
         padding-left: 1rem !important;
@@ -68,14 +68,26 @@
   window.ytAPIReady = false;
   window.playerReady = false;
   window.player = null;
-  
-  var tag = document.createElement('script');
+
+  const tag = document.createElement('script');
   tag.src = "https://www.youtube.com/iframe_api";
-  var firstScriptTag = document.getElementsByTagName('script')[0];
+  const firstScriptTag = document.getElementsByTagName('script')[0];
   firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
   window.setTitle = function (title) {
     document.title = title;
+  }
+
+  window.onPlayerReady = function (event) {
+    window.playerReady = true;
+  }
+
+  window.onPlayerStateChange = function (event) {
+    if (event.data === YT.PlayerState.ENDED) {
+      if (window.dotNetObjectRef) {
+        window.dotNetObjectRef.invokeMethodAsync('OnModalCloseClicked');
+      }
+    }
   }
 
   window.playVideo = function (videoId) {
@@ -88,50 +100,28 @@
         'iv_load_policy': 3
       },
       events: {
-        'onReady': onPlayerReady,
-        'onStateChange': onPlayerStateChange
+        'onReady': window.onPlayerReady,
+        'onStateChange': window.onPlayerStateChange
       }
     });
-  }
-
-  window.onPlayerStateChange = function (event) {
-    if (event.data === YT.PlayerState.ENDED) {
-      if (window.dotNetObjectRef) {
-        window.dotNetObjectRef.invokeMethodAsync('OnModalCloseClicked');
-      }
-    }
   }
 
   window.onYouTubeIframeAPIReady = function () {
     window.ytAPIReady = true;
   }
 
-  window.onPlayerReady = function (event) {
-    window.playerReady = true;
-  }
-
   window.checkAPIReady = function () {
-    console.log("checking if API is ready");
-    if (window.ytAPIReady) {
-      console.log("YouTube API is ready");
-      return true;
-    }
-
-    return false;
+    return !!window.ytAPIReady;
   }
 
   window.checkPlayer = function () {
-    if (player && playerReady) {
-      return true;
-    } else {
-      return false;
-    }
+    return !!(player && playerReady);
   }
 
   window.closeModal = function (id) {
     $("#" + id).modal("hide");
     $("body").css("overflow-y", "auto");
-    toggleMainUI();      
+    window.toggleMainUI();      
     if (player) {        
       player.stopVideo();
     }
@@ -141,7 +131,7 @@
     window.dotNetObjectRef = dotNetObjectRef;
     $("#" + id).modal({ backdrop: "static", keyboard: false });
     $("body").css("overflow-y", "hidden");
-    toggleMainUI();
+    window.toggleMainUI();
   }
 
   window.setModalCloseStopVideo = function (id) {
@@ -157,21 +147,21 @@
   }
 </script>
 
-  <app>
-    <component type="typeof(App)" render-mode="ServerPrerendered" />
-  </app>
+<app>
+    <component type="typeof(App)" render-mode="ServerPrerendered"/>
+</app>
 
-  <div id="blazor-error-ui">
+<div id="blazor-error-ui">
     <environment include="Staging,Production">
-      An error has occurred. This application may no longer respond until reloaded.
+        An error has occurred. This application may no longer respond until reloaded.
     </environment>
     <environment include="Development">
-      An unhandled exception has occurred. See browser dev tools for details.
+        An unhandled exception has occurred. See browser dev tools for details.
     </environment>
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
-  </div>
+</div>
 
-  <script src="_framework/blazor.server.js"></script>
+<script src="_framework/blazor.server.js"></script>
 </body>
 </html>

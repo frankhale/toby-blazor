@@ -1,11 +1,89 @@
 ﻿<div class="input-group mb-3">
     <div class="input-group-prepend">
-        <span class="input-group-text">            
-            <Icon Path="css/bootstrap/icons/search.svg" Title="Search" Invert=true />
+        <span class="input-group-text">
+            <Icon Path="css/bootstrap/icons/search.svg" Title="Search" Invert="true"/>
         </span>
     </div>
     <input class="form-control" type="search" placeholder="Search" aria-label="Search"
            spellcheck="false"
            @bind="@SearchTerm"
-           @onkeyup="@(eventArgs => OnKeyPress(eventArgs.Key))" />
+           @onkeyup="@(eventArgs => OnKeyPress(eventArgs.Key))"/>
 </div>
+
+@code {
+
+    private readonly VideoRepository _videos = new();
+
+    [Parameter] public EventCallback<SearchResult> OnSearch { get; set; }
+
+    private string SearchTerm { get; set; } = "";
+
+    private static async Task<SearchResult> CreateResult(SearchResultType type, Func<Task<Message>> action)
+    {
+        return await CreateResult<ThrowAwayDataItem>(type, null, null, action);
+    }
+
+    private static async Task<SearchResult> CreateResult<T>(SearchResultType type, List<T> data) where T : IDataItem
+    {
+        return await CreateResult(type, null, data, null);
+    }
+
+    private static async Task<SearchResult> CreateResult<T>(SearchResultType type, Message message, List<T> data,
+        Func<Task<Message>> action) where T : IDataItem
+    {
+        var result = new SearchResult();
+
+        if (action != null)
+            result.Message = await action();
+        else
+            result.Message = message;
+
+        if (data == null) return result;
+        result.Type = type;
+        result.Videos = data as List<Video>;
+
+        return result;
+    }
+
+    private async Task OnKeyPress(string key)
+    {
+        if (key != "Enter" || string.IsNullOrEmpty(SearchTerm)) return;
+        var searchValue = SearchTerm.ToLower().Split([' '], 2);
+
+        var result = searchValue switch
+        {
+            _ when MatchesCommandList(searchValue[0], "/clear") => CreateResult(SearchResultType.Search,
+                new List<Video>()),
+            _ when MatchesCommandList(searchValue[0], "/mg", "/manage") => CreateResult(SearchResultType.Manage,
+                await _videos.AllVideosAsync()),
+            _ when MatchesCommandList(searchValue[0], "/mgg", "/manage-groups") => CreateResult(
+                SearchResultType.ManageGroups, await _videos.AllGroupsAsync()),
+            _ when MatchesCommandList(searchValue[0], "/mgrp", "/manage-recently-played") => CreateResult(
+                SearchResultType.ManageRecentlyPlayed, await _videos.FindVideoByGroupAsync("Recently Played")),
+            _ when MatchesCommandList(searchValue[0], "/crp", "/clear-recently-played") =>
+                CreateResult(SearchResultType.Command,
+                    async () =>
+                    {
+                        await _videos.DeleteVideoRangeByGroupAsync("Recently Played");
+                        return new Message
+                            { Value = "Deleted all the videos in the Recently Played group", Type = "alert-danger" };
+                    }
+                ),
+            _ => CreateResult(SearchResultType.Search, await _videos.SearchAsync(SearchTerm))
+        };
+
+        await OnSearch.InvokeAsync(await result);
+
+        return;
+
+        static bool MatchesCommandList(string value, params string[] commands)
+        {
+            return commands.FirstOrDefault(x => x == value) != null;
+        }
+    }
+
+    public abstract class ThrowAwayDataItem : IDataItem
+    {
+    }
+
+}

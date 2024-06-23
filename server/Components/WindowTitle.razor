@@ -1,12 +1,12 @@
-﻿
-@inject IJSRuntime jsRuntime
+﻿@code {
 
-@code {
-    [Parameter]
-    public string Title { get; set; }
+    [Inject] IJSRuntime JsRuntime { get; set; }
+
+    [Parameter] public string Title { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await jsRuntime.InvokeVoidAsync("setTitle", Title);
+        await JsRuntime.InvokeVoidAsync("setTitle", Title);
     }
+
 }

@@ -1,20 +1,20 @@
 ﻿<div style="margin-top:25px;">
     <nav class="navbar navbar-light bg-light">
         <div class="navbar-brand">
-            <button type="button" class="btn btn-danger" disabled=@DeleteButtonDisabled @onclick=@OnDeleteButtonClicked>Delete</button>
+            <button type="button" class="btn btn-danger" disabled="@DeleteButtonDisabled "@onclick="@OnDeleteButtonClicked">Delete</button>
         </div>
         <div class="form-inline">
-            <form @onsubmit=@OnSearchButtonClicked>
+            <form @onsubmit="@OnSearchButtonClicked">
                 <div class="input-group">
                     <input type="text"
                            class="form-control"
                            placeholder="Type group name here..."
                            aria-label="Add group or search for group"
-                           aria-describedby="button-addon4"                           
-                           @oninput=@OnSearchTermChanged>
+                           aria-describedby="button-addon4"
+                           @oninput="@OnSearchTermChanged">
                     <div class="input-group-append" id="button-addon4">
-                        <button class="btn btn-info" type="button" @onclick=@OnAddButtonClicked disabled=@AddButtonDisabled>Add</button>
-                        <button class="btn btn-success" type="button" @onclick=@OnSearchButtonClicked disabled=@SearchButtonDisabled>Search</button>
+                        <button class="btn btn-info" type="button" @onclick="@OnAddButtonClicked" disabled="@AddButtonDisabled">Add</button>
+                        <button class="btn btn-success" type="button" @onclick="@OnSearchButtonClicked" disabled="@SearchButtonDisabled">Search</button>
                     </div>
                 </div>
             </form>
@@ -26,10 +26,120 @@
         {
             <div @key=@group.Name class="list-group-item d-flex justify-content-between align-items-center">
                 <div style="margin-left: 10px; margin-right:10px; margin-bottom: 30px;">
-                    <input type="checkbox" class="form-check-input" @onchange="eventArgs => OnCheckboxClicked(group.Name, eventArgs.Value)" />
+                    <input type="checkbox" class="form-check-input" @onchange="eventArgs => OnCheckboxClicked(group.Name, eventArgs.Value)"/>
                 </div>
-                <div class="w-100"><h5>@group.Name</h5></div>
+                <div class="w-100">
+                    <h5>@group.Name</h5>
+                </div>
             </div>
         }
     </div>
 </div>
+
+@code {
+
+    private readonly VideoRepository _videos = new();
+    private string SearchTerm { get; set; } = string.Empty;
+    private bool DeleteButtonDisabled { get; set; } = true;
+    private bool AddButtonDisabled { get; set; } = true;
+    private bool SearchButtonDisabled { get; set; } = true;
+    private List<Group> Groups { get; set; } = [];
+    private List<string> _groupsToDelete = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        Groups = await _videos.AllGroupsAsync();
+    }
+
+    private async Task OnSearchTermChanged(ChangeEventArgs e)
+    {
+        SearchTerm = e.Value?.ToString();
+
+        if (!string.IsNullOrEmpty(SearchTerm))
+        {
+            AddButtonDisabled = false;
+            SearchButtonDisabled = false;
+        }
+        else
+        {
+            AddButtonDisabled = true;
+            SearchButtonDisabled = true;
+
+            Groups = await _videos.AllGroupsAsync();
+        }
+    }
+
+    private async Task Search(string searchTerm)
+    {
+        if (!string.IsNullOrEmpty(searchTerm))
+        {
+            Groups = searchTerm switch
+            {
+                _ when searchTerm.StartsWith("/all", StringComparison.InvariantCultureIgnoreCase) => await _videos.AllGroupsAsync(),
+                _ => await _videos.FindGroupAsync(searchTerm)
+            };
+        }
+    }
+
+    private void OnCheckboxClicked(string name, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            if (!_groupsToDelete.Contains(name))
+            {
+                _groupsToDelete.Add(name);
+            }
+        }
+        else
+        {
+            if (_groupsToDelete.Contains(name))
+            {
+                _groupsToDelete.Remove(name);
+            }
+        }
+
+        DeleteButtonDisabled = _groupsToDelete.Count <= 0;
+    }
+
+    private async Task OnDeleteButtonClicked()
+    {
+        if (_groupsToDelete.Count > 0)
+        {
+            var deleteGroups = new List<Group>();
+
+            _groupsToDelete.ForEach(async x =>
+            {
+                var foundGroup = await _videos.FindGroupByNameAsync(x);
+                if (foundGroup != null)
+                {
+                    deleteGroups.Add(foundGroup);
+                }
+            });
+
+            if (deleteGroups.Count > 0)
+            {
+                await _videos.DeleteGroupRangeAsync(deleteGroups);
+                _groupsToDelete = [];
+                DeleteButtonDisabled = true;
+
+                Groups = await _videos.AllGroupsAsync();
+            }
+        }
+    }
+
+    private async Task OnAddButtonClicked()
+    {
+        await _videos.AddGroupAsync(SearchTerm);
+        Groups = await _videos.AllGroupsAsync();
+        SearchTerm = string.Empty;
+        await OnSearchTermChanged(new ChangeEventArgs { Value = string.Empty });
+    }
+
+    private async Task OnSearchButtonClicked()
+    {
+        await Search(SearchTerm);
+    }
+
+}
+
+}

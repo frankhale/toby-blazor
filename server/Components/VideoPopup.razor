@@ -1,20 +1,18 @@
-﻿@using System.Net 
-
-<div class="modal fade modal-tall" id="ytModal" tabindex="-1" role="dialog" aria-hidden="true">
+﻿<div class="modal fade modal-tall" id="ytModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog mw-100" role="document" style="width: 100% !important;">
         <div class="modal-content">
             <div class="modal-header">
                 @if (string.IsNullOrEmpty(SelectedVideo.Group) || SelectedVideo.Group == "Recently Played" || SelectedVideo.Group == "Favorites")
                 {
                     <div style="margin-right: 25px;" class="btn-group-toggle" data-toggle="buttons" @onclick=@OnAddToFavoritesButtonToggle>
-                        <label class="btn btn-secondary @(_addedToFavorites ? "active": "")">
+                        <label class="btn btn-secondary @(_addedToFavorites ? "active" : "")">
                             @if (_addedToFavorites)
                             {
-                                <Icon Path="css/bootstrap/icons/star-fill.svg" Title="Favorite" Invert=true />
+                                <Icon Path="css/bootstrap/icons/star-fill.svg" Title="Favorite" Invert=true/>
                             }
                             else
                             {
-                                <Icon Path="css/bootstrap/icons/star.svg" Title="Unfavorite" Invert=true />
+                                <Icon Path="css/bootstrap/icons/star.svg" Title="Unfavorite" Invert=true/>
                             }
                         </label>
                     </div>
@@ -22,14 +20,82 @@
                 <div>
                     <h5 class="modal-title">@WebUtility.HtmlDecode(SelectedVideo.Title)</h5>
                 </div>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick=@OnModalCloseClicked>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="@OnModalCloseClicked">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
 
             <div class="modal-body">
-                <YouTube VideoId=@SelectedVideo.YTId />
+                <YouTube VideoId="@SelectedVideo.YTId"/>
             </div>
         </div>
     </div>
 </div>
+
+@code {
+
+    [Inject] private IJSRuntime JsRuntime { get; set; }
+
+    [Parameter] public Video SelectedVideo { get; set; }
+
+    [Parameter] public EventCallback OnPopupClosed { get; set; }
+
+    private readonly VideoRepository _videos = new();
+    private bool _addedToFavorites;
+    private DotNetObjectReference<VideoPopup> _dotNetObjectReference;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _dotNetObjectReference = DotNetObjectReference.Create(this);
+        _addedToFavorites = await IsAddedToFavorites(SelectedVideo);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await OpenModal();
+        }
+    }
+
+    private async Task OpenModal()
+    {
+        await JsRuntime.InvokeVoidAsync("openModal", "ytModal", _dotNetObjectReference);
+    }
+
+    public async Task<bool> IsAddedToFavorites(Video video)
+    {
+        var found = await _videos.FindVideoByYtIdAsync(video.YTId, "Favorites");
+
+        return found is { Group: "Favorites" };
+    }
+
+    [JSInvokable("OnModalCloseClicked")]
+    public async Task OnModalCloseClicked()
+    {
+        await JsRuntime.InvokeVoidAsync("closeModal", "ytModal");
+        await JsRuntime.InvokeVoidAsync("setModalCloseStopVideo", "ytModal");
+        await OnPopupClosed.InvokeAsync(EventCallback.Empty);
+    }
+
+    public async Task OnAddToFavoritesButtonToggle()
+    {
+        if (!_addedToFavorites)
+        {
+            _addedToFavorites = true;
+            await _videos.AddVideoAsync(SelectedVideo, "Favorites");
+        }
+        else
+        {
+            _addedToFavorites = false;
+            await _videos.DeleteVideoAsync(SelectedVideo.YTId, "Favorites");
+        }
+    }
+
+    public void Dispose()
+    {
+        _dotNetObjectReference?.Dispose();
+        GC.SuppressFinalize(this);
+    }
+
+}

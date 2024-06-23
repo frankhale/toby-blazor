@@ -1,28 +1,27 @@
 ﻿@page "/"
-
 @using System.Net
 @using TobyBlazor.Models
 
 <div id="main-ui">
-    <CommandInput OnSearch="@OnSearchResults" />
-    
+    <CommandInput OnSearch="@OnSearchResults"/>
+
     <div style="padding-bottom: 15px;">
-        <VideoList Videos="@_topFiveRecentlyPlayed" RecentlyPlayed="true" OnSelectedVideo="@OnSelectedVideo" />
+        <VideoList Videos="@_topFiveRecentlyPlayed" RecentlyPlayed="true" OnSelectedVideo="@OnSelectedVideo"/>
     </div>
 
     @switch (Result.Type)
     {
         case SearchResultType.Manage:
         case SearchResultType.ManageRecentlyPlayed:
-            <VideoManagement Videos="@Result.Videos" OnDeleteVideo=@OnDeleteVideo RecentlyPlayed=@(Result.Type == SearchResultType.ManageRecentlyPlayed) />
+            <VideoManagement Videos="@Result.Videos" OnDeleteVideo=@OnDeleteVideo RecentlyPlayed=@(Result.Type == SearchResultType.ManageRecentlyPlayed)/>
             break;
         case SearchResultType.ManageGroups:
-            <GroupManagement />
+            <GroupManagement/>
             break;
         case SearchResultType.Search:
             <VideoPagination RecentlyPlayed=@RecentlyPlayed Videos=@Result.Videos>
                 <Content>
-                    <VideoList Videos="@context" OnSelectedVideo="@OnSelectedVideo" />
+                    <VideoList Videos="@context" OnSelectedVideo="@OnSelectedVideo"/>
                 </Content>
             </VideoPagination>
             break;
@@ -31,15 +30,66 @@
 
 @if (SelectedVideo != null && !string.IsNullOrEmpty(SelectedVideo.YTId))
 {
-    <WindowTitle Title="@WebUtility.HtmlDecode(SelectedVideo.Title)" />
-    <VideoPopup SelectedVideo="@SelectedVideo" OnPopupClosed="@OnVideoDismissed" />
+    <WindowTitle Title="@WebUtility.HtmlDecode(SelectedVideo.Title)"/>
+    <VideoPopup SelectedVideo="@SelectedVideo" OnPopupClosed="@OnVideoDismissed"/>
 }
 else
 {
-    <WindowTitle Title="Toby" />
+    <WindowTitle Title="Toby"/>
 }
 
 @if (Result.Message != null && !string.IsNullOrEmpty(Result.Message.Value))
 {
-    <Notification Message="@Result.Message.Value" NotificationType="@Result.Message.Type" OnClose="@OnNotificationClose" />
+    <Notification Message="@Result.Message.Value" NotificationType="@Result.Message.Type" OnClose="@OnNotificationClose"/>
+}
+
+@code
+{
+    private readonly VideoRepository _videos = new();
+    private List<Video> _topFiveRecentlyPlayed = [];
+
+    [Inject] private IJSRuntime JsRuntime { get; set; }
+
+    private SearchResult Result { get; set; } = new();
+    private Video SelectedVideo { get; set; }
+
+    private bool RecentlyPlayed { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _topFiveRecentlyPlayed = await _videos.GetRecentlyPlayedVideosAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender) await JsRuntime.InvokeVoidAsync("setModalCloseStopVideo", "ytModal");
+    }
+
+    private void OnSearchResults(SearchResult result)
+    {
+        Result = result;
+        RecentlyPlayed = result.Videos.Any(x => x.Group == "Recently Played");
+        StateHasChanged();
+    }
+
+    private void OnNotificationClose()
+    {
+        if (Result != null) Result = new SearchResult();
+    }
+
+    private async Task OnSelectedVideo(Video video)
+    {
+        _topFiveRecentlyPlayed = await _videos.GetRecentlyPlayedVideosAsync();
+        SelectedVideo = video;
+    }
+
+    private void OnVideoDismissed()
+    {
+        SelectedVideo = null;
+    }
+
+    private async Task OnDeleteVideo()
+    {
+        _topFiveRecentlyPlayed = await _videos.GetRecentlyPlayedVideosAsync();
+    }
 }

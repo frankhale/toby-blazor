@@ -1,14 +1,11 @@
-﻿@using System.Net
-@using TobyBlazor.Other
-
-<div style="margin-top: 25px;">
+﻿<div style="margin-top: 25px;">
     @if (!RecentlyPlayed)
     {
         <ul class="list-group">
             @foreach (var video in Videos)
             {
                 <li @key=video @onclick=@(async () => await VideoSelectedAsync(video)) class="list-group-item list-group-item-action d-flex justify-content-lg-start align-items-center @(SelectedVideo != null && video.YTId == SelectedVideo.YTId ? "active" : "")">
-                    <img class="mr-3" src="@HelperExtensions.GetDefaultVideoThumbnail(video.YTId)" title=@WebUtility.HtmlDecode(@video.Title) />
+                    <img class="mr-3" src="@HelperExtensions.GetDefaultVideoThumbnail(video.YTId)" title=@WebUtility.HtmlDecode(video.Title) alt="video thumbnail"/>
                     <h5 class="mt-0 video-title">@WebUtility.HtmlDecode(video.Title)</h5>
                 </li>
             }
@@ -20,9 +17,33 @@
             @foreach (var video in Videos)
             {
                 <li @key=video class="list-group-item flex-fill text-center @(SelectedVideo != null && video.YTId == SelectedVideo.YTId ? "active" : "")" @onclick="@(async () => await VideoSelectedAsync(video))">
-                    <img class="video-icon-horizontal-list" src="@HelperExtensions.GetDefaultVideoThumbnail(video.YTId)" title=@WebUtility.HtmlDecode(@video.Title) />
+                    <img class="video-icon-horizontal-list" src="@HelperExtensions.GetDefaultVideoThumbnail(video.YTId)" title=@WebUtility.HtmlDecode(video.Title) alt="video thumbnail"/>
                 </li>
             }
         </ul>
     }
 </div>
+
+@code {
+    [Parameter] public List<Video> Videos { get; set; }
+
+    [Parameter] public bool RecentlyPlayed { get; set; }
+
+    [Parameter] public EventCallback<Video> OnSelectedVideo { get; set; }
+
+    private readonly VideoRepository _videos = new();
+    private Video SelectedVideo { get; set; }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (SelectedVideo != null) SelectedVideo = null;
+    }
+
+    private async Task VideoSelectedAsync(Video video)
+    {
+        SelectedVideo = video;
+        await _videos.AddVideoToRecentlyPlayedAsync(video);
+        await OnSelectedVideo.InvokeAsync(video);
+    }
+
+}

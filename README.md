@@ -2,29 +2,17 @@
 
 **Requires: .NET 8**
 
+This is a simple YouTube player for your favorite videos.
+
 This is a rewrite of [Toby](https://github.com/frankhale/toby) using C# and
 Blazor. This project is using the server-side hosting model.
 
-This is a simple YouTube player for your favorite videos.
-
-## Status
-
-We are using SQLite with Entity Framework Core which makes it easy to interface
-with our database. I'm using [DB Browser](https://sqlitebrowser.org/) as a way
-to manage the db graphically.
-
-The UI is built with Bootstrap. I'm using Bootstrap directly at the moment
-instead of using libraries such as [BlazorStrap](https://github.com/chanan/BlazorStrap)
-or [Blazorise](https://github.com/stsrki/Blazorise). I'm using the Cyborg theme
-from [Bootswatch](https://bootswatch.com/).
-
 ## Usage
 
-NOTE: Currently the database shipping in the repo is a slighly modified one from
-[Toby](https://github.com/frankhale/toby). It's pre-populated with videos I like
-(LOL!). Use the command `/all` to list them or `/manage` to delete them all. Or
+NOTE: Currently the database shipping in the repo is a slightly modified one from
+[Toby](https://github.com/frankhale/toby). It's pre-populated with videos I like. Use the command `/all` to list them or `/manage` to delete them all. Or
 if using Visual Studio you can just delete the included database and run the
-Entity Framework migration to create an new empty database.
+Entity Framework migration to create a new empty database.
 
 NOTE: If you want to search YouTube you'll need a YouTube Data API key. This
 code needs to be added to an environment variable on your machine called

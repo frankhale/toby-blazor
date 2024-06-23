@@ -1,7 +1,36 @@
 ﻿<div class="alert-bottom alert @NotificationType" role="alert">
     @Message
 
-    <button type="button" class="close" aria-label="Close" @onclick=@OnCloseButtonClick>
+    <button type="button" class="close" aria-label="Close" @onclick="@OnCloseButtonClick">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
+
+@code {
+
+    [Parameter] public string Message { get; set; }
+
+    [Parameter] public string NotificationType { get; set; }
+
+    [Parameter] public EventCallback OnClose { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await Task.Delay(TimeSpan.FromSeconds(5));
+            await CallClose();
+        }
+    }
+
+    private async Task CallClose()
+    {
+        await OnClose.InvokeAsync(null);
+    }
+
+    private async Task OnCloseButtonClick()
+    {
+        await CallClose();
+    }
+
+}
