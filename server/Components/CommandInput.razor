@@ -31,12 +31,10 @@
     private static async Task<SearchResult> CreateResult<T>(SearchResultType type, Message message, List<T> data,
         Func<Task<Message>> action) where T : IDataItem
     {
-        var result = new SearchResult();
-
-        if (action != null)
-            result.Message = await action();
-        else
-            result.Message = message;
+        var result = new SearchResult
+        {
+            Message = action != null ? await action() : message
+        };
 
         if (data == null) return result;
         result.Type = type;

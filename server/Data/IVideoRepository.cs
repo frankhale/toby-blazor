@@ -13,9 +13,10 @@ public interface IVideoRepository
     public Task<Group> FindGroupByNameAsync(string name);
     public Task<List<Group>> FindGroupAsync(string like);
     public Task<List<Video>> FindVideoAsync(string like);
+
     public Task<List<Video>> FindVideoByGroupAsync(string group);
-    public Task<Video> FindVideoByYtIdAsync(string ytid);
-    public Task<Video> FindVideoByYtIdAsync(string ytid, string group);
+
+    public Task<Video> FindVideoByYtIdAsync(string ytid, string group = "");
 
     #endregion
 

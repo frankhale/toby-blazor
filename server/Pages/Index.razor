@@ -1,13 +1,16 @@
 ﻿@page "/"
-@using System.Net
-@using TobyBlazor.Models
 
 <div id="main-ui">
     <CommandInput OnSearch="@OnSearchResults"/>
 
-    <div style="padding-bottom: 15px;">
-        <VideoList Videos="@_topFiveRecentlyPlayed" RecentlyPlayed="true" OnSelectedVideo="@OnSelectedVideo"/>
-    </div>
+    @if (Result.Type != SearchResultType.Manage &&
+         Result.Type != SearchResultType.ManageRecentlyPlayed &&
+         Result.Type != SearchResultType.ManageGroups)
+    {
+        <div style="padding-bottom: 15px;">
+            <VideoList Videos="@_topFiveRecentlyPlayed" RecentlyPlayed="true" OnSelectedVideo="@OnSelectedVideo"/>
+        </div>
+    }
 
     @switch (Result.Type)
     {
@@ -68,7 +71,7 @@ else
     private void OnSearchResults(SearchResult result)
     {
         Result = result;
-        RecentlyPlayed = result.Videos.Any(x => x.Group == "Recently Played");
+        RecentlyPlayed = result.Videos != null && result.Videos.Any(x => x.Group == "Recently Played");
         StateHasChanged();
     }
 

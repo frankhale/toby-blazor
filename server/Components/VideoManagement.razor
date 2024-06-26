@@ -1,8 +1,8 @@
 ﻿<div style="margin-top:25px;">
     <nav class="navbar navbar-light bg-light">
         <div class="navbar-brand">
-            <button type="button" class="btn btn-warning" disabled="@ApplyButtonDisabled "@onclick="@OnApplyButtonClicked">Apply</button>
-            <button type="button" class="btn btn-danger" disabled="@DeleteButtonDisabled "@onclick="@OnDeleteButtonClicked">Delete</button>
+            <button type="button" class="btn btn-warning" disabled="@ApplyButtonDisabled" @onclick="@OnApplyButtonClicked">Apply</button>
+            <button type="button" class="btn btn-danger" disabled="@DeleteButtonDisabled" @onclick="@OnDeleteButtonClicked">Delete</button>
         </div>
 
         @if (!RecentlyPlayed)
@@ -32,7 +32,7 @@
                     <input type="checkbox" class="form-check-input" @onchange="eventArgs => { OnCheckboxClicked(video.YTId, eventArgs.Value); }"/>
                 </div>
                 <div>
-                    <img class="mr-3" src="@GetVideoThumbnail(video.YTId)" title=@WebUtility.HtmlDecode(video.Title)/>
+                    <img class="mr-3" src="@GetVideoThumbnail(video.YTId)" title=@WebUtility.HtmlDecode(video.Title) alt="video thumbnail"/>
                 </div>
                 <div class="w-100">
                     <h5>@video.Title</h5>
@@ -43,12 +43,10 @@
                             @video.Group
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                            @foreach (var group in Task.Run(async () => await _videos.AllGroupsAsync()).Result)
+                            @foreach (var group in Task.Run(async () => await _videos.AllGroupsAsync())
+                                          .Result.Where(group => group.Name != "Recently Played"))
                             {
-                                @if (group.Name != "Recently Played")
-                                {
-                                    <button class="dropdown-item" type="button" @onclick="eventArgs => { OnMenuItemSelected(video, group.Name); }">@group.Name</button>
-                                }
+                                <button class="dropdown-item" type="button" @onclick="eventArgs => { OnMenuItemSelected(video, group.Name); }">@group.Name</button>
                             }
                         </div>
                     </div>
@@ -61,9 +59,7 @@
 @code {
 
     [Parameter] public EventCallback OnDeleteVideo { get; set; }
-
     [Parameter] public List<Video> Videos { get; set; }
-
     [Parameter] public bool RecentlyPlayed { get; set; }
 
     private readonly VideoRepository _videos = new();

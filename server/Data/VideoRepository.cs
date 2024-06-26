@@ -42,16 +42,13 @@ public class VideoRepository : IVideoRepository
             .ToListAsync();
     }
 
-    public async Task<Video> FindVideoByYtIdAsync(string ytid)
+    public async Task<Video> FindVideoByYtIdAsync(string ytid, string group = "")
     {
-        return await _db.Videos.Where(x => x.YTId == ytid) // && x.Group != "Recently Played")
-            .FirstOrDefaultAsync();
-    }
+        var query = _db.Videos.Where(x => x.YTId == ytid);
 
-    public async Task<Video> FindVideoByYtIdAsync(string ytid, string group)
-    {
-        return await _db.Videos.Where(x => x.YTId == ytid && x.Group == group)
-            .FirstOrDefaultAsync();
+        if (!string.IsNullOrEmpty(group)) query = _db.Videos.Where(x => x.YTId == ytid && x.Group == group);
+
+        return await query.FirstOrDefaultAsync();
     }
 
     public async Task<List<Video>> SearchYouTubeAsync(string term)
@@ -141,6 +138,7 @@ public class VideoRepository : IVideoRepository
     public async Task<List<Group>> AllGroupsAsync()
     {
         return await _db.Groups
+            .Where(x => x.Name != "Recently Played")
             .OrderBy(x => x.Name)
             .ToListAsync();
     }
